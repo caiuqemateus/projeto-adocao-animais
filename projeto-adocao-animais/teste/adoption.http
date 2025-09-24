@@ -1,0 +1,33 @@
+### Criar adoção
+POST http://localhost:3000/adoptions
+Content-Type: application/json
+
+{
+  "adotanteId": 1,
+  "animalId": 1,
+  "dataAdocao": "2024-01-15T10:00:00.000Z"
+}
+
+### Listar todas as adoções
+GET http://localhost:3000/adoptions
+
+### Buscar adoções por adotante
+GET http://localhost:3000/adoptions?adotanteId=1
+
+### Buscar adoção por animal
+GET http://localhost:3000/adoptions?animalId=1
+
+### Buscar adoção por ID
+GET http://localhost:3000/adoptions/1
+
+### Atualizar adoção
+PUT http://localhost:3000/adoptions/1
+Content-Type: application/json
+
+{
+  "dataAdocao": "2024-01-20T14:30:00.000Z"
+}
+
+### Deletar adoção
+DELETE http://localhost:3000/adoptions/1
+

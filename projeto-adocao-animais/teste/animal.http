@@ -1,0 +1,43 @@
+### Criar animal
+POST http://localhost:3000/animals
+Content-Type: application/json
+
+{
+  "nome": "Rex",
+  "especie": "Cachorro",
+  "raca": "Labrador",
+  "idade": 3,
+  "sexo": "Macho",
+  "descricao": "Cachorro muito dócil e brincalhão",
+  "status": "disponivel",
+  "userId": 1,
+  "shelterId": 1
+}
+
+### Listar todos os animais
+GET http://localhost:3000/animals
+
+### Buscar animal por nome
+GET http://localhost:3000/animals?nome=Rex
+
+### Buscar animal por espécie
+GET http://localhost:3000/animals?especie=Cachorro
+
+### Buscar animal por status
+GET http://localhost:3000/animals?status=disponivel
+
+### Buscar animal por ID
+GET http://localhost:3000/animals/1
+
+### Atualizar animal
+PUT http://localhost:3000/animals/1
+Content-Type: application/json
+
+{
+  "descricao": "Cachorro muito dócil, brincalhão e carinhoso",
+  "status": "adotado"
+}
+
+### Deletar animal
+DELETE http://localhost:3000/animals/1
+
