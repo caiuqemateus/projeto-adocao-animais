@@ -3,12 +3,12 @@ POST http://localhost:3000/users HTTP/1.1
 Content-Type: application/json
 
 {
-    "name" : "Giovanna Saraiva",
-    "cpf" : "122.457.789-07",
-    "email" : "Gi@gamil.com",
-    "phone" : "(19) 91234-5678",
+    "name" : "Rafaela Saraiva",
+    "cpf" : "123.457.788-55",
+    "email" : "rafaela.saraiva@gmail.com",
+    "phone" : "(16) 91000-5678",
     "pass" : "123",
-    "endereco" : "Rua das Flores, 123"
+    "endereco" : "Rua Carlos Botelho, 1000"
 }
 
 ### Ler todos Usuários
