@@ -36,7 +36,7 @@ export const UserController= {
         res.status(200).json(users)
     },
 
-    async show(req, res, _next){
+    async show(req, res, next){
         try{
             const id = Number( req.params.id)
 
@@ -44,11 +44,12 @@ export const UserController= {
 
             res.status(200).json(u)
         }catch(err){
-            res.status(404).json({error:"Não encontrado"});
+            console.log(err)
+            next(err);
         }
     },
 
-    async del(req, res, _next){
+    async del(req, res, next){
         try{
             const id = Number( req.params.id)
 
@@ -56,12 +57,13 @@ export const UserController= {
 
             res.status(200).json(u)
         }catch(err){
-            res.status(404).json({error:"Não encontrado"});
+            console.log(err)
+            next(err);
         }
     },
 
 
-    async upd(req, res, _next){
+    async upd(req, res, next){
         try{
             const id = Number( req.params.id)
 
@@ -80,7 +82,8 @@ export const UserController= {
 
             res.status(200).json(u)
         }catch(err){
-            res.status(404).json({error:"Não encontrado"});
+            console.log(err)
+            next(err);
         }
     },
 }            

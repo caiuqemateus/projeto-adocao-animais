@@ -1,11 +1,27 @@
 import prisma from '../prisma.js';
 
-//nome da funcao (recebendo,responder,proximo)
-export const AnimalController= {
+export const AnimalController = {
     async store(req, res, next){
         try{
             const {nome, especie, raca, idade, sexo, descricao, status, userId, shelterId } = req.body;
+            
+            let u = await prisma.user.findFirst({
+                where: {id: Number(userId)}
+            });
 
+            if(!u){
+                res.status(301).json({'error':"Usuario informado não existe"});
+                return
+            }
+
+            let s = await prisma.shelter.findFirst({
+                where: {id: Number(shelterId)}
+            });
+
+            if(!s){
+                res.status(301).json({'error':"Usuario informado não existe"});
+                return
+            }
             const a = await prisma.animal.create({
                 data: { 
                     nome, 

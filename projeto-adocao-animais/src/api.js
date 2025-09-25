@@ -4,7 +4,6 @@ import express from 'express';
 
 import adoptionRoutes from './routes/adoption.js';
 import animalRoutes from './routes/animal.js';
-import postRoutes from './routes/post.js';
 import shelterRoutes from './routes/shelter.js';
 import userRoutes from './routes/user.js';
 
@@ -16,7 +15,7 @@ app.use('/users',userRoutes);
 app.use('/animals',animalRoutes);
 app.use('/shelters',shelterRoutes);
 app.use('/adoptions',adoptionRoutes);
-app.use('/posts',postRoutes);
+
 
 //Middleware de erro simples
 app.use((err, _req, res, _next) => {
@@ -29,6 +28,11 @@ app.use((err, _req, res, _next) => {
     if (err.code === 'P2025'){
         return res.status(404).json({
             error: 'Registro não encontrado'
+        });
+    }
+    if (err.code === 'P2003'){
+        return res.status(404).json({
+            error: 'Este registro tem dependência de outro campo'
         });
     }
     res.status(500).json({error: 'Erro interno'});
