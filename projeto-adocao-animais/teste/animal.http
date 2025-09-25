@@ -1,7 +1,7 @@
 ### Criar animal
-POST http://localhost:3000/animals
+POST http://localhost:3000/animals HTTP/1.1
 Content-Type: application/json
-
+ 
 {
   "nome": "Rex",
   "especie": "Cachorro",
@@ -13,31 +13,37 @@ Content-Type: application/json
   "userId": 1,
   "shelterId": 1
 }
-
+ 
 ### Listar todos os animais
-GET http://localhost:3000/animals
-
+GET http://localhost:3000/animals HTTP/1.1
+Content-Type: application/json
+ 
 ### Buscar animal por nome
-GET http://localhost:3000/animals?nome=Rex
-
+GET http://localhost:3000/animals?nome=Rex HTTP/1.1
+Content-Type: application/json
+ 
 ### Buscar animal por espécie
-GET http://localhost:3000/animals?especie=Cachorro
-
+GET http://localhost:3000/animals?especie=Cachorro HTTP/1.1
+Content-Type: application/json
+ 
 ### Buscar animal por status
-GET http://localhost:3000/animals?status=disponivel
-
+GET http://localhost:3000/animals?status=disponivel HTTP/1.1
+Content-Type: application/json
+ 
 ### Buscar animal por ID
-GET http://localhost:3000/animals/1
-
+GET http://localhost:3000/animals/1 HTTP/1.1
+Content-Type: application/json
+ 
 ### Atualizar animal
-PUT http://localhost:3000/animals/1
+PUT http://localhost:3000/animals/1 HTTP/1.1
 Content-Type: application/json
 
+### Deletar animal
+DELETE http://localhost:3000/animals/1
+Content-Type: application/json
+ 
 {
   "descricao": "Cachorro muito dócil, brincalhão e carinhoso",
   "status": "adotado"
 }
-
-### Deletar animal
-DELETE http://localhost:3000/animals/1
-
+ 
