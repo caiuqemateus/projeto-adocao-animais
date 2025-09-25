@@ -6,6 +6,10 @@ export const ShelterController= {
         try{
             const {nome, cnpj, endereco, telefone, responsavel, urlImage, isActive } = req.body;
 
+            if(endereco.length > 244){
+                res.status(401).json({'erro':"Quantidade de caracteres do endereço ultrapassam 244"})
+            };
+
             const s = await prisma.shelter.create({
                 data: { 
                     nome, 
