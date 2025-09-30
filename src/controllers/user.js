@@ -5,15 +5,38 @@ import prisma from '../prisma.js';
 
 //nome da funcao (recebendo,responder,proximo)
 
+function validaCPF(input) {
+    const cpf = String(input).replace(/\D+/g, ''); // só números
+
+    if (cpf.length !== 11) return false; 
+    if (/^(\d)\1{10}$/.test(cpf)) return false; // rejeita todos iguais
+
+    const digits = cpf.split('').map(Number);
+
+    // 1º dígito
+    let sum = 0;
+    for (let i = 0; i < 9; i++) sum += digits[i] * (10 - i);
+    let d1 = 11 - (sum % 11);
+    if (d1 >= 10) d1 = 0;
+
+    // 2º dígito
+    sum = 0;
+    for (let i = 0; i < 10; i++) sum += digits[i] * (11 - i);
+    let d2 = 11 - (sum % 11);
+    if (d2 >= 10) d2 = 0;
+
+    return d1 === digits[9] && d2 === digits[10];
+}
 
 export const UserController= {
     async store(req, res, next){
         try{
             const {email, pass, name,  cpf, phone, endereco } = req.body;
 
-            /*if(!validaCPF(cpf)){
-                res.status(401).json(u)({error:"Cpf não encontrado"})
-            }*/
+            if (!validaCPF(cpf)) {
+                return res.status(400).json({ error: "CPF inválido" });
+            }
+
             const hash = await bcrypt.hash(pass, 10);
 
             const u = await prisma.user.create({
@@ -72,16 +95,19 @@ export const UserController= {
         }
     },
 
-
-    async upd(req, res, next){
-        try{
-            const id = Number( req.params.id)
-
+    async upd(req, res, next) {
+        try {
+            const id = Number(req.params.id)
             let body = {};
 
             if (req.body.name) body.name = req.body.name
             if (req.body.email) body.email = req.body.email
-            if (req.body.cpf) body.cpf = req.body.cpf
+            if (req.body.cpf) {
+                if (!validaCPF(req.body.cpf)) {
+                    return res.status(400).json({ error: "CPF inválido" });
+                }
+                body.cpf = req.body.cpf
+            }
             if (req.body.phone) body.phone = req.body.phone
             if (req.body.endereco) body.endereco = req.body.endereco
 
@@ -91,7 +117,7 @@ export const UserController= {
             });
 
             res.status(200).json(u)
-        }catch(err){
+        } catch (err) {
             console.log(err)
             next(err);
         }
