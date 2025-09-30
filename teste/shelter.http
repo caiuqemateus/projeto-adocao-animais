@@ -3,13 +3,13 @@ POST http://localhost:4000/shelters
 Content-Type: application/json
 
 {
-  "nome": "Abrigo Amigos dos Animais",
-  "cnpj": "12.345.678/0001-90",
-  "endereco": "Av. dos Animais, 456",
-  "telefone": "(11) 3333-4444",
-  "responsavel": "Maria Santos",
+  "nome": "Alegria",
+  "cnpj": "12.366.678/0001-90",
+  "endereco": "Episcopal, 458",
+  "telefone": "(11) 4433-4444",
+  "responsavel": "",
   "urlImage": "https://exemplo.com/abrigo.jpg",
-  "isActive": true
+  "isActive": false
 }
 
 ### Listar todos os abrigos
@@ -30,9 +30,10 @@ Content-Type: application/json
 
 {
   "telefone": "(11) 3333-5555",
-  "responsavel": "Maria Silva Santos"
+  "responsavel": "Zé"
 }
 
 ### Deletar abrigo
+DELETE http://localhost:3000/shelters/2
 DELETE http://localhost:4000/shelters/1
 

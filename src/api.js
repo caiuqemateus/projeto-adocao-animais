@@ -30,6 +30,9 @@ app.use((err, _req, res, _next) => {
             error: 'Registro não encontrado'
         });
     }
+    if (err.code === 'P2011') {
+        return res.status(400).json({ error: 'Valor nulo em campo obrigatório' });
+    }
     if (err.code === 'P2003'){
         return res.status(404).json({
             error: 'Este registro tem dependência de outro campo'
