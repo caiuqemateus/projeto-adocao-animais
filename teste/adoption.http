@@ -1,5 +1,5 @@
 ### Criar adoção
-POST http://localhost:3000/adoptions
+POST http://localhost:4000/adoptions
 Content-Type: application/json
 
 {
@@ -9,19 +9,19 @@ Content-Type: application/json
 }
 
 ### Listar todas as adoções
-GET http://localhost:3000/adoptions
+GET http://localhost:4000/adoptions
 
 ### Buscar adoções por adotante
-GET http://localhost:3000/adoptions?adotanteId=1
+GET http://localhost:4000/adoptions?adotanteId=1
 
 ### Buscar adoção por animal
-GET http://localhost:3000/adoptions?animalId=1
+GET http://localhost:4000/adoptions?animalId=1
 
 ### Buscar adoção por ID
-GET http://localhost:3000/adoptions/1
+GET http://localhost:4000/adoptions/1
 
 ### Atualizar adoção
-PUT http://localhost:3000/adoptions/1
+PUT http://localhost:4000/adoptions/1
 Content-Type: application/json
 
 {
@@ -29,5 +29,5 @@ Content-Type: application/json
 }
 
 ### Deletar adoção
-DELETE http://localhost:3000/adoptions/1
+DELETE http://localhost:4000/adoptions/1
 
