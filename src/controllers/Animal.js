@@ -4,6 +4,10 @@ export const AnimalController = {
         try{
             const {nome, especie, raca, idade, sexo, descricao, status, userId, shelterId } = req.body;
             
+            if(descricao.length > 244){
+                res.status(401).json({'erro':"Quantidade de caracteres da descroção ultrapassam 244"})
+            };
+
             let u = await prisma.user.findFirst({
                 where: {id: Number(userId)}
             });
@@ -13,14 +17,18 @@ export const AnimalController = {
                 return
             }
 
-            let s = await prisma.shelter.findFirst({
-                where: {id: Number(shelterId)}
-            });
+            let s = null;
+            if (shelterId) {
+                s = await prisma.shelter.findFirst({
+                    where: { id: Number(shelterId) }
+                });
 
-            if(!s){
-                res.status(301).json({'error':"Usuario informado não existe"});
-                return
+                if(!s){
+                    res.status(400).json({ error: "Abrigo informado não existe" });
+                    return;
+                }
             }
+
             const a = await prisma.animal.create({
                 data: {
                     nome,
