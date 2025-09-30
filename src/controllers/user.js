@@ -4,6 +4,8 @@ import prisma from '../prisma.js';
 
 
 //nome da funcao (recebendo,responder,proximo)
+
+
 export const UserController= {
     async store(req, res, next){
         try{
