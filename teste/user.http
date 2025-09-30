@@ -1,19 +1,22 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImVtYWlsIjoicmFmYWVsYS5zYXJhaXZhMkBnbWFpbC5jb20iLCJuYW1lIjoiUkFBQSIsImlhdCI6MTc1OTI2MDc0NCwiZXhwIjoxNzU5Mjg5NTQ0fQ.hlIfESnSskhb41JsRI4fySkLrF3GVLYBdz9now_uv9w
+
 ##Criando um usuário
 POST http://localhost:3000/users HTTP/1.1
 Content-Type: application/json
 
 {
-    "name" : "Rafaela Saraiva",
-    "cpf" : "123.457.788-55",
-    "email" : "rafaela.saraiva@gmail.com",
-    "phone" : "(16) 91000-5678",
-    "pass" : "123",
-    "endereco" : "Rua Carlos Botelho, 1000"
+    "name" : "RAAA",
+    "cpf" : "123.457.788-56",
+    "email" : "rafaela.saraiva2@gmail.com",
+    "phone" : "(16) 91000-5679",
+    "pass" : "120",
+    "endereco" : "Rua Carlos Botelho, 1005"
 }
 
 ### Ler todos Usuários
 GET http://localhost:3000/users HTTP/1.1
 Content-type: application/json
+
 
 ### Ler todos Usuários
 GET http://localhost:3000/users?name=Rafaela Saraiva HTTP/1.1
@@ -31,10 +34,21 @@ Content-type: application/json
 ### Atualizar usuario pelo id
 PUT http://localhost:3000/users/1 HTTP/1.1
 Content-type: application/json
+Authorization: Bearer {{@token}}
 
 {
     "name": "Rafaela Saraiva",
     "email" : "rafaela.saraiva@gamil.com",
     "cpf" : "189.458.789-11",
     "phone": "(16) 91235-5678"
+}
+
+###faz o login
+POST http://localhost:3000/users/login HTTP/1.1
+Content-type: application/json
+
+
+{
+    "email":"rafaela.saraiva2@gmail.com",
+    "senha": "120"
 }

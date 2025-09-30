@@ -1,4 +1,7 @@
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import prisma from '../prisma.js';
+
 
 //nome da funcao (recebendo,responder,proximo)
 export const UserController= {
@@ -6,11 +9,16 @@ export const UserController= {
         try{
             const {email, pass, name,  cpf, phone, endereco } = req.body;
 
+            /*if(!validaCPF(cpf)){
+                res.status(401).json(u)({error:"Cpf não encontrado"})
+            }*/
+            const hash = await bcrypt.hash(pass, 10);
+
             const u = await prisma.user.create({
                 data: { 
                      
                     email, 
-                    pass,
+                    pass: hash,
                     name,   
                     cpf, 
                     phone,
@@ -86,4 +94,34 @@ export const UserController= {
             next(err);
         }
     },
+
+    async login(req, res, next){
+        try{
+            const {email, senha} = req.body;
+
+            let u = await prisma.user.findFirst({
+                where: {email: email}
+            })
+
+            if(!u){
+                res.status(404).json({error:"Não tem um usuário com esse e-mail"});
+                return;
+            }
+
+            const ok = await bcrypt.compare(senha, u.pass);
+            if (!ok) return res.status(401).json({erro: "Credenciais inválida"});
+
+            //gera jwt (PAYLOAD MINIMO)
+            const token = jwt.sign(
+                {sub: u.id, email: u.email, name: u.name},
+                process.env.JWT_SECRET,
+                {expiresIn: '8h'}
+            );
+
+            return res.json({ token});
+        }catch(e){
+            next(e);
+        }
+    },
+    
 }            
