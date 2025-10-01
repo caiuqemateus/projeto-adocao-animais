@@ -7,5 +7,3 @@ npm run dev
 
 =======
 npm install bcrypt express-session nodmailer uuid
-
-> > > > > > > cb3461b7c152bb32dc32543e4daa199550ff4db5
