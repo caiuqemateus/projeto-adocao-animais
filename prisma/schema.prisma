@@ -42,7 +42,7 @@ model Animal {
   shelterId Int?
 
   // Relações
-  user      User?     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   shelter   Shelter? @relation(fields: [shelterId], references: [id])
   adocao    Adoption?
 
