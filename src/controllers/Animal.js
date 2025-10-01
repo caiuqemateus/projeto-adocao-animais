@@ -8,13 +8,21 @@ export const AnimalController = {
                 res.status(401).json({'erro':"Quantidade de caracteres da descroção ultrapassam 244"})
             };
 
-            let u = await prisma.user.findFirst({
-                where: {id: Number(userId)}
-            });
+            
+            if ((!userId && !shelterId) || (userId && shelterId)){
+                res.status(301).json({ error: "Cadastre apenas como ONG ou apenas como Usuário" });
+            }
 
-            if(!u){
-                res.status(301).json({'error':"Usuario informado não existe"});
-                return
+            let u = null;
+            if (userId) {
+                s = await prisma.user.findFirst({
+                    where: { id: Number(userId) }
+                });
+
+                if(!u){
+                    res.status(400).json({ error: "Usuário informado não existe" });
+                    return;
+                }
             }
 
             let s = null;
