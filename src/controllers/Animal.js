@@ -1,4 +1,4 @@
-import prisma from '../prisma.js';
+import prisma from '../prisma.js'
 export const AnimalController = {
     async store(req, res, next){
         try{
