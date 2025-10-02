@@ -19,7 +19,7 @@ export const AnimalController = {
 
             let u = null;
             if (userId) {
-                s = await prisma.user.findFirst({
+                u = await prisma.user.findFirst({
                     where: { id: Number(userId) }
                 });
 

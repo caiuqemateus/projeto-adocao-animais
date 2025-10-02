@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImVtYWlsIjoicmFmYWVsYS5zYXJhaXZhMkBnbWFpbC5jb20iLCJuYW1lIjoiUkFBQSIsImlhdCI6MTc1OTI2MDc0NCwiZXhwIjoxNzU5Mjg5NTQ0fQ.hlIfESnSskhb41JsRI4fySkLrF3GVLYBdz9now_uv9w
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoicmFmYWVsYS5zYXJhaXZhODQyQGdtYWlsLmNvbSIsIm5hbWUiOiJtYWNhY28iLCJpYXQiOjE3NTk0MzI4NjEsImV4cCI6MTc1OTQ2MTY2MX0.Tv1nDqyrHQJa6SnESdaRaOmU9TKZiSpKBVootRU9Q2I
 
 ##Criando um usuário
 POST http://localhost:4000/users HTTP/1.1
@@ -44,11 +44,11 @@ Authorization: Bearer {{@token}}
 }
 
 ###faz o login
-POST http://localhost:3000/users/login HTTP/1.1
+POST http://localhost:4000/users/login HTTP/1.1
 Content-type: application/json
 
 
 {
-    "email":"rafaela.saraiva2@gmail.com",
+    "email":"rafaela.saraiva842@gmail.com",
     "senha": "120"
 }
