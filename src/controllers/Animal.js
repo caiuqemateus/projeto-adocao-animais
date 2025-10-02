@@ -8,13 +8,36 @@ export const AnimalController = {
                 res.status(401).json({'erro':"Quantidade de caracteres da descroção ultrapassam 244"})
             };
 
-            let u = await prisma.user.findFirst({
-                where: {id: Number(userId)}
-            });
+            if(!userId){
+                userId = req.logado.id
+            }
 
-            if(!u){
-                res.status(301).json({'error':"Usuario informado não existe"});
-                return
+            
+            if ((!userId && !shelterId) || (userId && shelterId)){
+                res.status(301).json({ error: "Cadastre apenas como ONG ou apenas como Usuário" });
+            }
+
+            let u = null;
+            if (userId) {
+                s = await prisma.user.findFirst({
+                    where: { id: Number(userId) }
+                });
+
+                if(!u){
+                    res.status(400).json({ error: "Usuário informado não existe" });
+                    return;
+                }
+            }
+
+            let data = {
+                nome,
+                especie,
+                raca,  
+                idade,
+                sexo,
+                descricao,
+                status,
+                userId
             }
 
             let s = null;
@@ -27,20 +50,13 @@ export const AnimalController = {
                     res.status(400).json({ error: "Abrigo informado não existe" });
                     return;
                 }
+
+                data.shelterId = Number(shelterId)
             }
 
+               
             const a = await prisma.animal.create({
-                data: {
-                    nome,
-                    especie,
-                    raca,  
-                    idade,
-                    sexo,
-                    descricao,
-                    status,
-                    userId,
-                    shelterId
-                }
+                data: data
             });
          
             res.status(201).json(a);
@@ -50,7 +66,9 @@ export const AnimalController = {
     },
     async index(req, res, next){
         let query = {}
- 
+        if(!req.logado.id){
+            return res.status(301).json({ error: "Usuário não logado" })
+        }
         if (req.query.nome) query.nome = {contains: req.query.nome}
         if (req.query.especie) query.especie = {contains: req.query.especie}
         if (req.query.status) query.status = req.query.status
@@ -69,7 +87,10 @@ export const AnimalController = {
     async show(req, res, _next){
         try{
             const id = Number( req.params.id)
- 
+            
+            if(!req.logado.id){
+                return res.status(301).json({ error: "Usuário não logado" })
+            }
             let a = await prisma.animal.findFirstOrThrow({
                 where: {id},
                 include: {
@@ -99,7 +120,9 @@ export const AnimalController = {
     async upd(req, res, _next){
         try{
             const id = Number( req.params.id)
- 
+            if(!req.logado.id){
+                return res.status(301).json({ error: "Usuário não logado" })
+            }
             let body = {};
  
             if (req.body.nome) body.nome = req.body.nome

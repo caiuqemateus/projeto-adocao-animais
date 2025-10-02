@@ -7,6 +7,8 @@ import animalRoutes from './routes/animal.js';
 import shelterRoutes from './routes/shelter.js';
 import userRoutes from './routes/user.js';
 
+import { verificaToken } from './middlewares/auth.js';
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -14,7 +16,7 @@ app.use(express.json());
 app.use('/users',userRoutes);
 app.use('/animals',animalRoutes);
 app.use('/shelters',shelterRoutes);
-app.use('/adoptions',adoptionRoutes);
+app.use('/adoptions',verificaToken, adoptionRoutes);
 
 
 //Middleware de erro simples

@@ -31,3 +31,12 @@ Content-Type: application/json
 ### Deletar adoção
 DELETE http://localhost:4000/adoptions/1
 
+
+###verifica de token
+PUT http://localhost:4000/adoptions/1
+Authorization: Bearer {{@token}}
+Content-Type: application/json
+
+{
+  "dataAdocao": "2024-01-20T14:30:00.000Z"
+}
