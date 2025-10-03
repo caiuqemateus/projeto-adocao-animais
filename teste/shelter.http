@@ -1,6 +1,10 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoicmFmYWVsYS5zYXJhaXZhODQyQGdtYWlsLmNvbSIsIm5hbWUiOiJtYWNhY28iLCJpYXQiOjE3NTk1MTE3ODEsImV4cCI6MTc1OTU0MDU4MX0.6-fkL-_L8t1_aooNAiDNQy8LMoLfG806jvyyX0tcjzA
+
+
 ### Criar abrigo
 POST http://localhost:4000/shelters
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "nome": "Alegria",
@@ -27,6 +31,7 @@ GET http://localhost:4000/shelters/1
 ### Atualizar abrigo
 PUT http://localhost:4000/shelters/1
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "telefone": "(11) 3333-5555",
