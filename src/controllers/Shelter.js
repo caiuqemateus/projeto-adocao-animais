@@ -51,7 +51,9 @@ export const ShelterController= {
     async show(req, res, _next){
         try{
             const id = Number( req.params.id)
-
+            if(!req.logado.id){
+                return res.status(301).json({ error: "Usuário não logado" })
+            }
             let s = await prisma.shelter.findFirstOrThrow({
                 where: {id},
                 include: {
