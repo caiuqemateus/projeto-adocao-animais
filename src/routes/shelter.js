@@ -3,11 +3,11 @@ import { ShelterController } from '../controllers/Shelter.js';
 
 const route = Router();
 
-route.post('/', ShelterController.store);
-route.get('/:id',ShelterController.show);
-route.delete('/:id',ShelterController.del);
+route.post('/',verificaToken, ShelterController.store);
+route.get('/:id',verificaToken, ShelterController.show);
+route.delete('/:id', ShelterController.del);
 route.put('/:id', ShelterController.upd);
-route.get('/',ShelterController.index);
+route.get('/', ShelterController.index);
 
 
 

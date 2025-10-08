@@ -1,5 +1,10 @@
 import prisma from '../prisma.js';
-
+/*
+isso aq é para validar, precisa do token, tem colocar isso na parte que vai precisar de token e na mesma parte na rota
+if(!req.logado.id){
+    return res.status(301).json({ error: "Usuário não logado" })
+}
+*/
 //nome da funcao (recebendo,responder,proximo)
 export const ShelterController= {
     async store(req, res, next){
@@ -46,7 +51,9 @@ export const ShelterController= {
     async show(req, res, _next){
         try{
             const id = Number( req.params.id)
-
+            if(!req.logado.id){
+                return res.status(301).json({ error: "Usuário não logado" })
+            }
             let s = await prisma.shelter.findFirstOrThrow({
                 where: {id},
                 include: {

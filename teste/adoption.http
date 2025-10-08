@@ -1,3 +1,6 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoicmFmYWVsYS5zYXJhaXZhODQyQGdtYWlsLmNvbSIsIm5hbWUiOiJtYWNhY28iLCJpYXQiOjE3NTk0MzI4NjEsImV4cCI6MTc1OTQ2MTY2MX0.Tv1nDqyrHQJa6SnESdaRaOmU9TKZiSpKBVootRU9Q2I
+
+
 ### Criar adoção
 POST http://localhost:4000/adoptions
 Content-Type: application/json
@@ -34,7 +37,7 @@ DELETE http://localhost:4000/adoptions/1
 
 ###verifica de token
 PUT http://localhost:4000/adoptions/1
-Authorization: Bearer {{@token}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {

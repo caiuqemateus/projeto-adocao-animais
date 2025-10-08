@@ -1,84 +1,192 @@
 generator client {
+
   provider = "prisma-client-js"
-}
 
+}
+ 
 datasource db {
+
   provider = "sqlite"
+
   url      = env("DATABASE_URL")
+
 }
-
+ 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  pass      String
-  name      String
-  cpf       String    @unique
-  phone     String
-  endereco  String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
 
+  id        Int       @id @default(autoincrement())
+
+  email     String    @unique
+
+  pass      String
+
+  name      String
+
+  cpf       String    @unique
+
+  phone     String
+
+  endereco  String?
+
+  createdAt DateTime  @default(now())
+
+  updatedAt DateTime  @updatedAt
+ 
   // Relações
+
   animais   Animal[]
+
   adocoes   Adoption[]
 
+  group GroupUser[]
+ 
   @@map("users")
-}
 
+}
+ 
 model Animal {
+
   id        Int       @id @default(autoincrement())
+
   nome      String
+
   especie   String
+
   raca      String?
+
   idade     Int?
+
   sexo      String?
+
   descricao String?
+
   status    String    @default("disponivel")
+
   createdAt DateTime  @default(now())
+
   updatedAt DateTime  @updatedAt
-
+ 
   // FKs
+
   userId    Int
+
   shelterId Int?
-
+ 
   // Relações
+
   user      User     @relation(fields: [userId], references: [id])
+
   shelter   Shelter? @relation(fields: [shelterId], references: [id])
+
   adocao    Adoption?
-
+ 
   @@map("animals")
-}
 
+}
+ 
 model Shelter {
+
   id          Int       @id @default(autoincrement())
+
   nome        String
+
   cnpj        String?   @unique
+
   endereco    String?
+
   telefone    String?
+
   responsavel String?
+
   urlImage    String?
+
   isActive    Boolean   @default(true)
+
   createdAt   DateTime  @default(now())
+
   updatedAt   DateTime  @updatedAt
-
+ 
   // Relações
+
   animals Animal[]
-
+ 
   @@map("shelters")
-}
 
+}
+ 
 model Adoption {
+
   id         Int       @id @default(autoincrement())
+
   dataAdocao DateTime  @default(now())
-
+ 
   // FKs
+
   adotanteId Int
+
   animalId   Int       @unique
-
+ 
   // Relações
-  adotante   User   @relation(fields: [adotanteId], references: [id])
-  animal     Animal @relation(fields: [animalId], references: [id])
 
+  adotante   User   @relation(fields: [adotanteId], references: [id])
+
+  animal     Animal @relation(fields: [animalId], references: [id])
+ 
   @@map("adoptions")
+
+}
+ 
+model Role{
+ 
+id  Int @id @default(autoincrement())
+
+nome  String @unique
+
+descricao String
+ 
+groups RoleGroups[]
+
+}
+ 
+ 
+model Group{
+
+  id Int @id  @default(autoincrement())
+
+nome  String @unique
+descricao String
+
+roles RoleGroups[]
+
+users GroupUser[] 
+
+
+}
+ 
+
+
+
+model GroupUser{
+id Int @id @default(autoincrement())
+
+user User @relation(fields: [userId], references: [id])
+userId Int
+
+group Group @relation(fields:[groupId], references:[id])
+groupId Int
+
+@@unique([userId, groupId], name: "userId_groupId")
 }
 
+
+model RoleGroups{
+id Int @id @default(autoincrement())
+
+group Group @relation(fields: [groupId], references: [id])
+groupId Int
+
+role Role @relation(fields:[roleId], references:[id])
+roleId Int
+
+@@unique([groupId, roleId], name: "groupId_roleId")
+}
