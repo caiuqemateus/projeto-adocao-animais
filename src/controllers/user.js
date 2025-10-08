@@ -38,7 +38,7 @@ export const UserController= {
             }
 
             const hash = await bcrypt.hash(pass, 10);
-
+            // Marcius falou que quando for cadastrar um usuario que pertence a uma ong tem que criar o usergroup passando ong
             const u = await prisma.user.create({
                 data: { 
                      

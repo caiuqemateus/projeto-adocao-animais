@@ -1,4 +1,4 @@
-
+import prisma from '../prisma.js';
 
 export function verificaRole(requiredRole){
     const need = Array.isArray(requiredRole) ? requiredRole : [requiredRole]
@@ -8,9 +8,10 @@ export function verificaRole(requiredRole){
             const userId = req.logado?.id;
             if(!userId) return res.status(401).json({ erro: 'Não autenticado'});
 
-            const vinculo = await prisma.roleGroup.findFirst({
+            const vinculo = await prisma.roleGroups.findFirst({
                 where: {
-                    role: { name: { in: need }},
+                    role: { nome: { in: need }},
+                    group: { users: { some: { userId } } },
                 },
                 select: { id: true }
             });

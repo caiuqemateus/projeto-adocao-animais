@@ -1,5 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoicmFmYWVsYS5zYXJhaXZhODQyQGdtYWlsLmNvbSIsIm5hbWUiOiJtYWNhY28iLCJpYXQiOjE3NTk1MTE3ODEsImV4cCI6MTc1OTU0MDU4MX0.6-fkL-_L8t1_aooNAiDNQy8LMoLfG806jvyyX0tcjzA
-
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImVtYWlsIjoiam9objQuQGdtYWlsLmNvbSIsIm5hbWUiOiJKb2huIiwiaWF0IjoxNzU5OTU0NzM2LCJleHAiOjE3NTk5ODM1MzZ9.fwJnbHdfXB1Xh0FAsg1Eh3ZlGZshWL6pz9saTT2Fo9o
 
 ### Criar abrigo
 POST http://localhost:4000/shelters
@@ -27,6 +26,9 @@ GET http://localhost:4000/shelters?isActive=true
 
 ### Buscar abrigo por ID
 GET http://localhost:4000/shelters/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
 
 ### Atualizar abrigo
 PUT http://localhost:4000/shelters/1
