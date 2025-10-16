@@ -8,8 +8,8 @@ route.post('/', UserController.store);
 route.get('/:id',UserController.show);
 route.get('/',UserController.index);
 route.post('/:login',UserController.login);
-route.delete('/:id',verificaToken,UserController.del);
-route.put('/:id', verificaToken, UserController.upd);
+route.delete('/:id',verificaToken, verificaRole(["ADMIN"]),UserController.del);
+route.put('/:id', verificaToken, verificaRole(["ADMIN", "EDITOR"]), UserController.upd);
 
 
 

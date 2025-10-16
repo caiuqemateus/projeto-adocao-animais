@@ -54,7 +54,7 @@ async function main() {
     { nome: 'EDITOR',  descricao: 'Adicionar animais para adoção'},
     { nome: 'VIEWER',  descricao: 'Somente leitura'},
     { nome: 'OWNER',   descricao: 'Responsável pelo grupo/projeto' },
-    { nome: 'deleteAnimal',   descricao: 'Pode deletar um animal' },
+    { nome: 'DELETEANIMAL',   descricao: 'Pode deletar um animal' },
     { nome: 'POBRE',  descricao: 'Adicionar animais para adoção de forma limitada'}
   ];
 
@@ -84,7 +84,7 @@ async function main() {
   await connectRoleToGroup({ groupId: groups['Administrador'].id,        roleId: roles.EDITOR.id });
   await connectRoleToGroup({ groupId: groups['Administrador'].id,        roleId: roles.VIEWER.id });
   await connectRoleToGroup({ groupId: groups['Administrador'].id,        roleId: roles.OWNER.id });
-  await connectRoleToGroup({ groupId: groups['Administrador'].id,        roleId: roles.deleteAnimal.id });
+  await connectRoleToGroup({ groupId: groups['Administrador'].id,        roleId: roles.DELETEANIMAL.id });
 
   await connectRoleToGroup({ groupId: groups['ONG'].id, roleId: roles.EDITOR.id });
   await connectRoleToGroup({ groupId: groups['ONG'].id, roleId: roles.VIEWER.id });
