@@ -4,7 +4,7 @@ import {verificaToken} from '../middlewares/auth.js';
 import { verificaRole } from '../middlewares/roles.js';
 const route = Router();
 
-route.post('/',verificaToken, ShelterController.store);
+route.post('/',verificaToken,verificaRole(["EDITOR"]), ShelterController.store);
 route.get('/:id',verificaToken,verificaRole(["VIEWER"]), ShelterController.show);
 route.delete('/:id', ShelterController.del);
 route.put('/:id', ShelterController.upd);
