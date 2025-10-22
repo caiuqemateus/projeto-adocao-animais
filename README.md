@@ -558,6 +558,224 @@ Respostas:
 
 500 Internal Server Error: erro no servidor
 
+
+
+
+# API — Endpoints: Adoções (Adoptions)
+
+Esta seção documenta os endpoints relacionados ao fluxo de adoção. O modelo Adoption liga um usuário (adotante) a um animal. Ao criar uma adoção, o status do animal deve ser atualizado para `adotado`. As operações críticas (criar/excluir adoção + atualizar status do animal) devem ser executadas em transação para garantir consistência.
+
+Versão da API: 1.0.0
+
+---
+
+## 3.1 Criar adoção
+- Rota: POST /adoptions
+- Headers:
+  - Content-Type: application/json
+  - Authorization: Bearer <token> (usuário autenticado)
+- Body:
+```json
+{
+  "animalId": 1
+}
+```
+- Regras:
+  - O usuário autenticado será o `adotante` (não é necessário enviar adotanteId no body).
+  - Verificar se o animal existe e está com `status = "disponivel"`.
+  - Criar o registro em `Adoption` com `adotanteId` = id do usuário autenticado e `animalId`.
+  - Atualizar `Animal.status` para `"adotado"`.
+  - Operação deve ser feita em transação (ex.: Prisma `$transaction`) para garantir atomicidade.
+- Exemplo de resposta (201 Created):
+Headers:
+```
+Location: /adoptions/10
+```
+Body (opcional):
+```json
+{
+  "id": 10,
+  "dataAdocao": "2025-10-22T19:22:19.000Z",
+  "adotanteId": 3,
+  "animalId": 1
+}
+```
+- Códigos de status:
+  - 201 Created — adoção criada com sucesso
+  - 400 Bad Request — animalId ausente ou inválido
+  - 401 Unauthorized — token inválido ou ausente
+  - 404 Not Found — animal não encontrado
+  - 409 Conflict — animal já adotado
+  - 500 Internal Server Error — erro no servidor
+
+---
+
+## 3.2 Consultar adoção por ID
+- Rota: GET /adoptions/:id
+- Headers:
+  - Authorization: Bearer <token> (recomendado)
+- Permissões:
+  - Usuário autenticado pode ver sua própria adoção; administradores/ONGs podem ver todas.
+- Resposta (200 OK):
+```json
+{
+  "id": 10,
+  "dataAdocao": "2025-10-22T19:22:19.000Z",
+  "adotante": {
+    "id": 3,
+    "name": "Rafaela Saraiva",
+    "email": "rafaela843@gmail.com"
+  },
+  "animal": {
+    "id": 1,
+    "nome": "Luna",
+    "especie": "Gato",
+    "raca": "Siamês",
+    "idade": 2,
+    "sexo": "F",
+    "descricao": "Gatinha dócil e vacinada"
+  }
+}
+```
+- Códigos de status:
+  - 200 OK — sucesso
+  - 400 Bad Request — id inválido
+  - 401 Unauthorized — sem permissão
+  - 404 Not Found — adoção não encontrada
+  - 500 Internal Server Error
+
+---
+
+## 3.3 Listar adoções (filtros)
+- Rota: GET /adoptions
+- Query params (opcionais):
+  - adotanteId — filtra por usuário adotante
+  - animalId — filtra por animal
+  - from — data inicial (ISO)
+  - to — data final (ISO)
+- Exemplo:
+```
+GET /adoptions?adotanteId=3
+```
+- Resposta (200 OK):
+```json
+[
+  {
+    "id": 10,
+    "dataAdocao": "2025-10-22T19:22:19.000Z",
+    "adotanteId": 3,
+    "animalId": 1,
+    "animal": { "id": 1, "nome": "Luna", "especie": "Gato" }
+  },
+  {
+    "id": 11,
+    "dataAdocao": "2025-09-01T14:00:00.000Z",
+    "adotanteId": 3,
+    "animalId": 5,
+    "animal": { "id": 5, "nome": "Rex", "especie": "Cachorro" }
+  }
+]
+```
+- Códigos de status:
+  - 200 OK — sucesso
+  - 400 Bad Request — parâmetros inválidos
+  - 500 Internal Server Error
+
+---
+
+## 3.4 Cancelar / Remover adoção
+- Rota: DELETE /adoptions/:id
+- Headers:
+  - Authorization: Bearer <token>
+- Regras:
+  - Somente o adotante (dono da adoção) ou usuário com permissão (admin/ONG responsável) pode cancelar.
+  - Ao remover a adoção, atualizar `Animal.status` para `"disponivel"` (ou outro status apropriado).
+  - Operação deve ser transacional para garantir consistência.
+- Resposta:
+  - 200 OK — adoção removida (body pode estar vazio ou retornar um objeto com infos)
+  - 400 Bad Request — id inválido
+  - 401 Unauthorized — sem permissão
+  - 403 Forbidden — usuário não autorizado a deletar
+  - 404 Not Found — adoção não encontrada
+  - 500 Internal Server Error
+
+Exemplo de comportamento (pseudo):
+- DELETE /adoptions/10
+  - Verifica permissão
+  - Deleta registro em Adoptions
+  - Atualiza Animal.status para "disponivel"
+  - Retorna 200
+
+---
+
+## 3.5 Endpoints auxiliares / ações relacionadas
+- GET /adoptions/animal/:animalId — retorna a adoção do animal (se houver). Útil para checar se um animal já foi adotado.
+- PATCH /adoptions/:id/transfer — (opcional) transferir adoção/atualizar adotante. Deve ser restrito a admins.
+- Webhook / envio de e-mail: ao criar ou cancelar adoção, notificar ONG e adotante por e-mail (usar nodemailer).
+
+---
+
+## Exemplo de implementação (conceito usando Prisma)
+- Criação em transação (pseudocódigo):
+```js
+const [adoption, updatedAnimal] = await prisma.$transaction([
+  prisma.adoption.create({ data: { adotanteId, animalId } }),
+  prisma.animal.update({ where: { id: animalId }, data: { status: 'adotado' } })
+]);
+```
+- Remoção em transação:
+```js
+const [deletedAdoption, updatedAnimal] = await prisma.$transaction([
+  prisma.adoption.delete({ where: { id: adoptionId } }),
+  prisma.animal.update({ where: { id: animalId }, data: { status: 'disponivel' } })
+]);
+```
+
+---
+
+## Validações e segurança
+- Verificar existência do animal.
+- Garantir que `animal.status === "disponivel"` antes de criar adoção.
+- Proteger endpoints com JWT e checagem de papéis/permissões.
+- Usar transações para evitar inconsistências.
+- Fazer logs/auditoria das ações de adoção (quem criou, quem removeu, quando).
+- Tratar race conditions: ao criar adoção simultânea para o mesmo animal, retornar 409 Conflict para quem não conseguir.
+
+---
+
+## Exemplos cURL
+Criar adoção:
+```bash
+curl -X POST "http://localhost:3000/adoptions" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"animalId": 1}'
+```
+
+Listar adoções do usuário:
+```bash
+curl "http://localhost:3000/adoptions?adotanteId=3" \
+  -H "Authorization: Bearer <TOKEN>"
+```
+
+---
+
+## Mensagens de erro padrão sugeridas (exemplos)
+- 400: { "error": "animalId inválido" }
+- 401: { "error": "token ausente ou inválido" }
+- 403: { "error": "acesso negado" }
+- 404: { "error": "adoção não encontrada" }
+- 409: { "error": "animal já adotado" }
+- 500: { "error": "erro interno do servidor" }
+
+---
+
+## Observações finais
+- Recomenda-se documentar esses endpoints também no OpenAPI/Swagger para facilitar testes e geração de clientes.
+- Se quiser, eu posso gerar a rota Express completa (controller + service + validações) usando Prisma e incluir testes básicos para esses endpoints.
+
+
+
 Créditos e versão
 
 Versão da API: 1.0.0
