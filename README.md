@@ -329,6 +329,242 @@ Exemplo de retorno:
  
 ---
  
+ ## API — Endpoints: Animais (Animals)
+
+2.1 Criar animal
+
+Rota: POST /animals
+
+Descrição: Cadastra um novo animal no sistema.
+
+Headers:
+
+Content-Type: application/json
+
+Authorization: Bearer <token> (somente usuários autenticados podem criar)
+
+Body:
+
+{
+  "nome": "string com o nome do animal",
+  "especie": "string com a espécie (ex.: gato, cachorro)",
+  "raca": "string com a raça (opcional)",
+  "idade": 3,
+  "sexo": "M/F",
+  "descricao": "string com informações adicionais (opcional)",
+  "status": "disponivel"
+}
+
+
+Exemplo:
+
+{
+  "nome": "Luna",
+  "especie": "Gato",
+  "raca": "Siamês",
+  "idade": 2,
+  "sexo": "F",
+  "descricao": "Gatinha dócil e vacinada",
+  "status": "disponivel"
+}
+
+
+Respostas:
+
+201 Created: sucesso no cadastro
+
+400 Bad Request: campos obrigatórios ausentes
+
+401 Unauthorized: token ausente ou inválido
+
+500 Internal Server Error: erro no servidor
+
+2.2 Consultar animal por ID
+
+Rota: GET /animals/:id
+
+Descrição: Retorna os dados de um animal específico.
+
+Query: id (no path)
+
+Body: nenhum
+
+Exemplo de resposta (200):
+
+{
+  "id": 1,
+  "nome": "Luna",
+  "especie": "Gato",
+  "raca": "Siamês",
+  "idade": 2,
+  "sexo": "F",
+  "descricao": "Gatinha dócil e vacinada",
+  "status": "disponivel",
+  "createdAt": "2025-10-21T19:30:00.000Z",
+  "userId": 3,
+  "shelterId": 1
+}
+
+
+Status codes possíveis:
+
+200 OK: sucesso
+
+400 Bad Request: id inválido
+
+404 Not Found: animal não encontrado
+
+500 Internal Server Error: erro interno
+
+2.3 Listar todos os animais (com filtros opcionais)
+
+Rota: GET /animals
+
+Descrição: Retorna todos os animais cadastrados.
+
+Query Params (opcionais):
+
+especie — filtra por espécie
+
+status — ex.: “disponivel” ou “adotado”
+
+nome — busca por nome parcial
+
+Exemplo:
+GET /animals?especie=Gato&status=disponivel
+
+Exemplo de resposta (200):
+
+[
+  {
+    "id": 1,
+    "nome": "Luna",
+    "especie": "Gato",
+    "raca": "Siamês",
+    "idade": 2,
+    "sexo": "F",
+    "descricao": "Gatinha dócil e vacinada",
+    "status": "disponivel"
+  },
+  {
+    "id": 2,
+    "nome": "Rex",
+    "especie": "Cachorro",
+    "raca": "Labrador",
+    "idade": 4,
+    "sexo": "M",
+    "descricao": "Brincalhão e amigável",
+    "status": "adotado"
+  }
+]
+
+
+Status codes:
+
+200 OK: sucesso
+
+500 Internal Server Error: erro no servidor
+
+2.4 Atualizar animal
+
+Rota: PUT /animals/:id
+
+Descrição: Atualiza as informações de um animal existente.
+
+Headers:
+
+Content-Type: application/json
+
+Authorization: Bearer <token>
+
+Body (campos opcionais):
+
+{
+  "nome": "Luna",
+  "raca": "Siamês Misturado",
+  "idade": 3,
+  "descricao": "Gata vacinada e castrada",
+  "status": "adotado"
+}
+
+
+Respostas:
+
+200 OK: sucesso
+
+400 Bad Request: dados inválidos
+
+401 Unauthorized: token inválido
+
+404 Not Found: animal não encontrado
+
+500 Internal Server Error: erro interno
+
+2.5 Deletar animal
+
+Rota: DELETE /animals/:id
+
+Descrição: Remove um animal do sistema.
+
+Headers:
+
+Authorization: Bearer <token>
+
+Query: id (no path)
+
+Respostas:
+
+200 OK: sucesso na remoção
+
+400 Bad Request: id inválido
+
+401 Unauthorized: token ausente/inválido
+
+404 Not Found: animal não encontrado
+
+500 Internal Server Error: erro interno
+
+2.6 Listar animais disponíveis para adoção
+
+Rota: GET /animals/available
+
+Descrição: Retorna todos os animais com status = "disponivel".
+
+Respostas:
+
+200 OK
+
+[
+  {
+    "id": 1,
+    "nome": "Luna",
+    "especie": "Gato",
+    "raca": "Siamês",
+    "idade": 2,
+    "sexo": "F",
+    "descricao": "Gatinha dócil e vacinada"
+  },
+  {
+    "id": 3,
+    "nome": "Thor",
+    "especie": "Cachorro",
+    "raca": "Vira-lata",
+    "idade": 1,
+    "sexo": "M",
+    "descricao": "Energia alta e adora passear"
+  }
+]
+
+
+500 Internal Server Error: erro no servidor
+
+Créditos e versão
+
+Versão da API: 1.0.0
+Última atualização: 22/10/2025
+Desenvolvido por: Equipe Novo Amigo 🐾
+Projeto Integrador — Senac
+
 ## Observações e boas práticas
 - Valide CPF, e-mail e outros campos no backend antes de persistir.  
 - Armazene senhas com bcrypt (hash + salt).  
