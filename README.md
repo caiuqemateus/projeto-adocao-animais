@@ -350,7 +350,7 @@ Exemplo de retorno:
   "descricao": "string com informações adicionais (opcional)",  
   "status": "disponivel"  
 }  
----
+```
 
 **Exemplo:**  
 ```json  
@@ -363,7 +363,7 @@ Exemplo de retorno:
   "descricao": "Gatinha dócil e vacinada",  
   "status": "disponivel"  
 }  
----
+```
 
 **Respostas:**  
 - 201 Created: sucesso no cadastro  
@@ -371,7 +371,7 @@ Exemplo de retorno:
 - 401 Unauthorized: token ausente ou inválido  
 - 500 Internal Server Error: erro no servidor
 
----
+```
 
 ## 2.2 Consultar animal por ID
 
@@ -396,7 +396,7 @@ Exemplo de retorno:
   "userId": 3,  
   "shelterId": 1  
 }  
----
+```
 
 **Status codes possíveis:**  
 - 200 OK: sucesso  
@@ -443,7 +443,7 @@ GET /animals?especie=Gato&status=disponivel
     "status": "adotado"  
   }  
 ]  
----
+```
 
 **Status codes:**  
 - 200 OK: sucesso  
@@ -469,7 +469,7 @@ GET /animals?especie=Gato&status=disponivel
   "descricao": "Gata vacinada e castrada",  
   "status": "adotado"  
 }  
----
+```
 
 **Respostas:**  
 - 200 OK: sucesso  
@@ -497,7 +497,7 @@ GET /animals?especie=Gato&status=disponivel
 - 404 Not Found: animal não encontrado  
 - 500 Internal Server Error: erro interno
 
----
+```
 
 ## 2.6 Listar animais disponíveis para adoção
 
@@ -526,7 +526,7 @@ GET /animals?especie=Gato&status=disponivel
     "descricao": "Energia alta e adora passear"  
   }  
 ]  
----
+```
 
 **Status codes:**  
 - 200 OK: sucesso  
@@ -539,7 +539,7 @@ Esta seção documenta os endpoints relacionados ao fluxo de adoção. O modelo 
 
 Versão da API: 1.0.0
 
----
+```
 
 ## 3.1 Criar adoção
 - Rota: POST /adoptions
