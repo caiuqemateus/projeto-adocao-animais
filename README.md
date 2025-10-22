@@ -350,7 +350,7 @@ Exemplo de retorno:
   "descricao": "string com informações adicionais (opcional)",  
   "status": "disponivel"  
 }  
-```json
+---
 
 **Exemplo:**  
 ```json  
@@ -363,7 +363,7 @@ Exemplo de retorno:
   "descricao": "Gatinha dócil e vacinada",  
   "status": "disponivel"  
 }  
-```json
+---
 
 **Respostas:**  
 - 201 Created: sucesso no cadastro  
@@ -396,7 +396,7 @@ Exemplo de retorno:
   "userId": 3,  
   "shelterId": 1  
 }  
-```json
+---
 
 **Status codes possíveis:**  
 - 200 OK: sucesso  
@@ -404,7 +404,7 @@ Exemplo de retorno:
 - 404 Not Found: animal não encontrado  
 - 500 Internal Server Error: erro interno
 
----
+
 
 ## 2.3 Listar todos os animais (com filtros opcionais)
 
@@ -443,13 +443,13 @@ GET /animals?especie=Gato&status=disponivel
     "status": "adotado"  
   }  
 ]  
-```json
+---
 
 **Status codes:**  
 - 200 OK: sucesso  
 - 500 Internal Server Error: erro no servidor
 
----
+
 
 ## 2.4 Atualizar animal
 
@@ -469,7 +469,7 @@ GET /animals?especie=Gato&status=disponivel
   "descricao": "Gata vacinada e castrada",  
   "status": "adotado"  
 }  
-```json
+---
 
 **Respostas:**  
 - 200 OK: sucesso  
@@ -478,7 +478,7 @@ GET /animals?especie=Gato&status=disponivel
 - 404 Not Found: animal não encontrado  
 - 500 Internal Server Error: erro interno
 
----
+
 
 ## 2.5 Deletar animal
 
@@ -526,7 +526,7 @@ GET /animals?especie=Gato&status=disponivel
     "descricao": "Energia alta e adora passear"  
   }  
 ]  
-```json
+---
 
 **Status codes:**  
 - 200 OK: sucesso  
