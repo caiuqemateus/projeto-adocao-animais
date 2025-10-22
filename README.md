@@ -371,7 +371,7 @@ Exemplo de retorno:
 - 401 Unauthorized: token ausente ou inválido  
 - 500 Internal Server Error: erro no servidor
 
-```
+
 
 ## 2.2 Consultar animal por ID
 
