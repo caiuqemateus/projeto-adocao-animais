@@ -6,7 +6,7 @@ generator client {
  
 datasource db {
 
-  provider = " postgresql"
+  provider = "postgresql"
 
   url      = env("DATABASE_URL")
 
@@ -52,13 +52,17 @@ model Animal {
 
   especie   String
 
-  raca      String?
+  raca      String
+
+  porte     String?
 
   idade     Int?
 
   sexo      String?
 
   descricao String?
+
+  foto      String
 
   status    String    @default("disponivel")
 

@@ -9,7 +9,7 @@ route.post('/',verificaToken,verificaRole(["POBRE", "EDITOR", "ADMIN"]) ,AnimalC
 route.get('/:id', AnimalController.show);
 route.delete('/:id',AnimalController.del);
 route.put('/:id',verificaToken ,verificaRole(["POBRE", "EDITOR", "ADMIN"]) ,AnimalController.upd);
-route.get('/',AnimalController.index);
+route.get('/',verificaToken,AnimalController.index);
 
 
 

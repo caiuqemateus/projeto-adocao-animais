@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoicmFmYWVsYTg0M0BnbWFpbC5jb20iLCJuYW1lIjoiUmFmYWVsYSIsImlhdCI6MTc1OTk0MzU0NiwiZXhwIjoxNzU5OTcyMzQ2fQ.SA4hFPBhLApeycRgjBHuJEWZvR7gfyMM6uZpIWiU2t0
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoicmFmYWVsYTg0M0BnbWFpbC5jb20iLCJuYW1lIjoiUmFmYWVsYSIsImlhdCI6MTc2MTA3NjAzMywiZXhwIjoxNzYxMTA0ODMzfQ.SV62JFKix0l489wLBlrhpT1v_zNCFaK5wx_Bdd536xY
 
 
 ### Criar animal
@@ -10,6 +10,7 @@ Authorization: Bearer {{token}}
   "nome": "Rex",
   "especie": "Cachorro",
   "raca": "Labrador",
+  "porte":"Gordo",
   "idade": 3,
   "sexo": "Macho",
   "descricao": "Cachorro muito dócil e brincalhão",
@@ -20,7 +21,7 @@ Authorization: Bearer {{token}}
 ### Listar todos os animais
 GET http://localhost:4000/animals HTTP/1.1
 Content-Type: application/json
-
+Authorization: Bearer {{token}}
 ### Buscar animal por nome
 GET http://localhost:4000/animals?nome=Rex HTTP/1.1
 Content-Type: application/json
