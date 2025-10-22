@@ -497,7 +497,7 @@ GET /animals?especie=Gato&status=disponivel
 - 404 Not Found: animal não encontrado  
 - 500 Internal Server Error: erro interno
 
-```
+
 
 ## 2.6 Listar animais disponíveis para adoção
 
