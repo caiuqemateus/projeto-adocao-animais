@@ -64,7 +64,11 @@ model Animal {
 
   foto      String
 
-  status    String    @default("disponivel")
+  vacinado Boolean
+
+  castrado Boolean
+
+  Disponivel    Boolean    @default(true)
 
   createdAt DateTime  @default(now())
 

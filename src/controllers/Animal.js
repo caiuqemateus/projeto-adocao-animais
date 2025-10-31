@@ -2,7 +2,7 @@ import prisma from '../prisma.js'
 export const AnimalController = {
     async store(req, res, next){
         try{
-            const {nome, especie, porte, raca, idade, sexo, descricao, status, userId, shelterId } = req.body;
+            const {nome, especie, porte, foto, raca, idade, sexo, descricao, status, userId, shelterId } = req.body;
             
             if(descricao.length > 244){
                 res.status(401).json({'erro':"Quantidade de caracteres da descroção ultrapassam 244"})
@@ -31,6 +31,7 @@ export const AnimalController = {
 
             let data = {
                 nome,
+                foto,
                 especie,
                 porte,
                 raca,  
@@ -67,9 +68,7 @@ export const AnimalController = {
     },
     async index(req, res, next){
         let query = {}
-        if(!req.logado.id){
-            return res.status(301).json({ error: "Usuário não logado" })
-        }
+
         if (req.query.nome) query.nome = {contains: req.query.nome}
         if (req.query.especie) query.especie = {contains: req.query.especie}
         if (req.query.porte) query.porte = {contains: req.query.porte}
@@ -90,9 +89,7 @@ export const AnimalController = {
         try{
             const id = Number( req.params.id)
             
-            if(!req.logado.id){
-                return res.status(301).json({ error: "Usuário não logado" })
-            }
+            
             let a = await prisma.animal.findFirstOrThrow({
                 where: {id},
                 include: {
