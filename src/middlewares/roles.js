@@ -17,7 +17,7 @@ export function verificaRole(requiredRole){
             });
 
             if (!vinculo){
-                return req.status(403).json({ erro: 'Acesso negado.'})
+                return res.status(403).json({ erro: 'Acesso negado.'})
             }
 
             return next();

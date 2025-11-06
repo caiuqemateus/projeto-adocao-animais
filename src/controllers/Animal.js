@@ -119,7 +119,7 @@ export const AnimalController = {
     async upd(req, res, _next){
         try{
             const id = Number( req.params.id)
-            if(!req.logado.userId){
+            if(!req.logado.id){
                 return res.status(301).json({ error: "Usuário não logado" })
             }
             let body = {};
