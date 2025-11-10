@@ -2,7 +2,7 @@ import prisma from '../prisma.js'
 export const AnimalController = {
     async store(req, res, next){
         try{
-            const {nome, especie, porte, foto, raca, idade, sexo, descricao, status, userId, shelterId } = req.body;
+            const {nome, especie, vacinado, castrado, porte, foto, raca, idade, sexo, descricao, disponivel, userId, shelterId } = req.body;
             
             if(descricao.length > 244){
                 res.status(401).json({'erro':"Quantidade de caracteres da descroção ultrapassam 244"})
@@ -36,9 +36,11 @@ export const AnimalController = {
                 porte,
                 raca,  
                 idade,
+                castrado,
+                vacinado,
                 sexo,
                 descricao,
-                status,
+                disponivel,
                 userId
             }
 

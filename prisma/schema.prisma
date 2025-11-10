@@ -68,7 +68,7 @@ model Animal {
 
   castrado Boolean
 
-  Disponivel    Boolean    @default(true)
+  disponivel    Boolean    @default(true)
 
   createdAt DateTime  @default(now())
 

@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiam9objQuQGdtYWlsLmNvbSIsIm5hbWUiOiJKb2huIiwiaWF0IjoxNzYyNDUxNjU5LCJleHAiOjE3NjI0ODA0NTl9.ORg0rIEswmLWfjKjLQMccX99maWiU1yb8h2zauf6BZg
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiam9objRAZ21haWwuY29tIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE3NjI1MzUzNjQsImV4cCI6MTc2MjU2NDE2NH0.vxe1BwOMPBlSObZObUdvWypIWpFtFBSpzKNWeJzqtTs
 
 ### Criar animal
 POST http://localhost:4000/animals HTTP/1.1
@@ -6,17 +6,17 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "nome": "Rsadex",
+  "nome": "Teste",
   "especie": "Cachorro",
   "raca": "Labrador",
   "porte":"Gordo",
-  "foto":"/carlos",
+  "foto":"https://i.postimg.cc/R01j2263/imagem.jpg",
   "idade": 3,
   "sexo": "Macho",
   "castrado": true,
   "vacinado": false,
   "descricao": "Cachorro muito dócil, brincalhão e gosta de sexo",
-  "status": "disponivel",
+  "disponivel": false,
   "userId": 1
 }
  
@@ -46,14 +46,14 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "nome": "Destruidora",
+  "nome": "Docinho",
   "especie": "Cachorro",
   "raca": "Pincher",
-  "foto":"/nada",
+  "foto":"https://i.postimg.cc/R01j2263/imagem.jpg",
   "idade": 3,
   "sexo": "Macho",
   "descricao": "Devorador de almas",
-  "status": "disponivel(não recomendavel)",
+  "Disponivel": false,
   "userId": 1,
   "shelterId": 1
 }
