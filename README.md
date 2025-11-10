@@ -45,9 +45,10 @@ npx prisma db push --force-reset
 npx prisma studio                      # Abre painel visual para ver e editar dados
 ```
  
-5. Inicie o servidor em modo desenvolvimento:
+5. Inicie o servidor em modo desenvolvimento e rode o seed para ter o adm:
 ```bash
 npm run dev
+npm run seed
 ```
  
 6. Bibliotecas úteis (caso precise instalar manualmente):
