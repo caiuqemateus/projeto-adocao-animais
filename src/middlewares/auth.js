@@ -16,7 +16,7 @@ export function verificaToken(req, res, next){
         };
     return next();
     }catch (e){
-        return req.status(403).json({erro: "Token inváiido ou expirado"});
+        return res.status(403).json({erro: "Token inváiido ou expirado"});
     }
 
 

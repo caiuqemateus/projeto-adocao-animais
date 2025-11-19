@@ -75,6 +75,8 @@ export const AnimalController = {
         if (req.query.especie) query.especie = {contains: req.query.especie}
         if (req.query.porte) query.porte = {contains: req.query.porte}
         if (req.query.status) query.status = req.query.status
+        if (req.query.vacinado) query.vacinado = req.query.vacinado
+        if (req.query.castrado) query.castrado = req.query.castrado
  
         const animals = await prisma.animal.findMany({
             where: query,

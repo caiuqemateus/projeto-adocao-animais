@@ -1,4 +1,4 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiam9objQuQGdtYWlsLmNvbSIsIm5hbWUiOiJKb2huIiwiaWF0IjoxNzYyNzk3MDA5LCJleHAiOjE3NjI4MjU4MDl9.ZxzQUSKtqBQ5w2Gux31hGI0eq_LatqCh84XNgOdC0u8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiam9objRAZ21haWwuY29tIiwibmFtZSI6IkpvaG4iLCJpYXQiOjE3NjM1ODAyOTcsImV4cCI6MTc2MzYwOTA5N30.JjgJOYOWo74vD74FWzxetYyy3z80qVxHfa7wRC8wHAc
 
 ### Criar animal
 POST http://localhost:4000/animals HTTP/1.1
@@ -7,15 +7,15 @@ Authorization: Bearer {{token}}
 
 {
   "nome": "Teste",
-  "especie": "cachorro",
-  "raca": "Labrador",
-  "porte":"Gordo",
-  "foto":"https://i.postimg.cc/R01j2263/imagem.jpg",
-  "idade": 3,
-  "sexo": "Macho",
+  "especie": "animal de fazenda",
+  "raca": "Teste",
+  "porte":"Pequena",
+  "foto":"https://i.postimg.cc/4NjK3psV/image.png",
+  "idade": 18,
+  "sexo": "Femea",
   "castrado": true,
   "vacinado": false,
-  "descricao": "Cachorro muito dócil, brincalhão e gosta de sexo",
+  "descricao": "Teste",
   "disponivel": true,
   "userId": 1
 }
