@@ -6,10 +6,11 @@ import {verificaRole} from '../middlewares/roles.js'
 const route = Router();
 
 route.post('/', UserController.store);
-route.get('/:id',UserController.show);
-route.get('/',UserController.index);
-route.post('/:login',UserController.login);
-route.delete('/:id',verificaToken, verificaRole(["ADMIN"]),UserController.del);
+route.post('/login', UserController.login);
+route.get('/me', verificaToken, UserController.me);
+route.get('/:id', UserController.show);
+route.get('/', UserController.index);
+route.delete('/:id', verificaToken, verificaRole(["ADMIN"]), UserController.del);
 route.put('/:id', verificaToken, verificaRole(["ADMIN", "EDITOR"]), UserController.upd);
 
 

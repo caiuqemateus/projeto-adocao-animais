@@ -124,32 +124,58 @@ export const UserController= {
     },
 
     async login(req, res, next){
-        try{
-            const {email, senha} = req.body;
+  try{
+    const {email, senha} = req.body;
 
-            let u = await prisma.user.findFirst({
-                where: {email: email}
-            })
+    let u = await prisma.user.findFirst({
+      where: {email: email}
+    })
 
-            if(!u){
-                res.status(404).json({error:"Não tem um usuário com esse e-mail"});
-                return;
-            }
+    if(!u){
+      return res.status(404).json({error:"Não tem um usuário com esse e-mail"});
+    }
 
-            const ok = await bcrypt.compare(senha, u.pass);
-            if (!ok) return res.status(401).json({erro: "Credenciais inválida"});
+    const ok = await bcrypt.compare(senha, u.pass);
+    if (!ok) return res.status(401).json({erro: "Credenciais inválidas"});
 
-            //gera jwt (PAYLOAD MINIMO)
-            const token = jwt.sign(
-                {sub: u.id, email: u.email, name: u.name},
-                process.env.JWT_SECRET,
-                {expiresIn: '8h'}
-            );
+    const token = jwt.sign(
+      {sub: u.id, email: u.email, name: u.name},
+      process.env.JWT_SECRET,
+      {expiresIn: '8h'}
+    );
 
-            return res.json({ token});
-        }catch(e){
-            next(e);
-        }
-    },
+    return res.json({
+      token,
+      usuario: {
+        id: u.id,
+        email: u.email,
+        nome: u.name
+      }
+    });
+
+  }catch(e){
+    next(e);
+  }
+},
+    async me(req, res) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.logado.id }
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "Usuário não encontrado" });
+    }
+
+    res.json({
+        id: user.id,
+        email: user.email,
+        nome: user.name
+});
+
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao buscar usuário" });
+  }
+}
     
 }            
