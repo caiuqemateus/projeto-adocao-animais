@@ -95,33 +95,41 @@ export const UserController= {
         }
     },
 
-    async upd(req, res, next) {
-        try {
-            const id = Number(req.params.id)
-            let body = {};
+   async upd(req, res, next) {
+  try {
+    const id = Number(req.params.id)
+    let body = {};
 
-            if (req.body.name) body.name = req.body.name
-            if (req.body.email) body.email = req.body.email
-            if (req.body.cpf) {
-                if (!validaCPF(req.body.cpf)) {
-                    return res.status(400).json({ error: "CPF inválido" });
-                }
-                body.cpf = req.body.cpf
-            }
-            if (req.body.phone) body.phone = req.body.phone
-            if (req.body.endereco) body.endereco = req.body.endereco
+    if (req.body.name) body.name = req.body.name
+    if (req.body.email) body.email = req.body.email
 
-            const u = await prisma.user.update({
-                where: { id },
-                data: body
-            });
+    if (req.body.pass) {
+      const hash = await bcrypt.hash(req.body.pass, 10);
+      body.pass = hash;
+    }
 
-            res.status(200).json(u)
-        } catch (err) {
-            console.log(err)
-            next(err);
-        }
-    },
+    if (req.body.cpf) {
+      if (!validaCPF(req.body.cpf)) {
+        return res.status(400).json({ error: "CPF inválido" });
+      }
+      body.cpf = req.body.cpf
+    }
+
+    if (req.body.phone) body.phone = req.body.phone
+    if (req.body.endereco) body.endereco = req.body.endereco
+
+    const u = await prisma.user.update({
+      where: { id },
+      data: body
+    });
+
+    res.status(200).json(u)
+
+  } catch (err) {
+    console.log(err)
+    next(err);
+  }
+},
 
     async login(req, res, next){
   try{

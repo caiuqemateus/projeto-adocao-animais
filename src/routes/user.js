@@ -11,8 +11,7 @@ route.get('/me', verificaToken, UserController.me);
 route.get('/:id', UserController.show);
 route.get('/', UserController.index);
 route.delete('/:id', verificaToken, verificaRole(["ADMIN"]), UserController.del);
-route.put('/:id', verificaToken, verificaRole(["ADMIN", "EDITOR"]), UserController.upd);
-
+route.put('/:id', UserController.upd);
 
 
 export default route;
