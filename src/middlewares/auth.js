@@ -4,7 +4,7 @@ export function verificaToken(req, res, next){
     const auth = req.headers.authorization || "";
     const token = auth.startsWith("Bearer ") ? auth.slice(7) : null;
 
-    if (!token) return res.status(401).json({erro: "Token não enviado"});
+    if (!token) return res.status(401).json({ error: "Token não enviado" });
 
     try{
         const payload = jwt.verify(token, process.env.JWT_SECRET);
@@ -16,7 +16,7 @@ export function verificaToken(req, res, next){
         };
     return next();
     }catch (e){
-        return res.status(403).json({erro: "Token inváiido ou expirado"});
+        return res.status(403).json({ error: "Token inválido ou expirado" });
     }
 
 

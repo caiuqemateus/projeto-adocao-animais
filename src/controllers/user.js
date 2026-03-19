@@ -160,7 +160,7 @@ export const UserController= {
     }
 
     const ok = await bcrypt.compare(senha, u.pass);
-    if (!ok) return res.status(401).json({erro: "Credenciais inválidas"});
+    if (!ok) return res.status(401).json({ error: "Credenciais inválidas" });
 
     const token = jwt.sign(
       {sub: u.id, email: u.email, name: u.name},

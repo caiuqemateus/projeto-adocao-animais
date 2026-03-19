@@ -6,7 +6,7 @@ export function verificaRole(requiredRole){
     return async (req, res, next) => {
         try {
             const userId = req.logado?.id;
-            if(!userId) return res.status(401).json({ erro: 'Não autenticado'});
+            if(!userId) return res.status(401).json({ error: 'Não autenticado' });
 
             const vinculo = await prisma.roleGroups.findFirst({
                 where: {
@@ -17,13 +17,13 @@ export function verificaRole(requiredRole){
             });
 
             if (!vinculo){
-                return req.status(403).json({ erro: 'Acesso negado.'})
+                return res.status(403).json({ error: 'Acesso negado.' })
             }
 
             return next();
         } catch (e) {
             console.error('verificaRole error:',e);
-            return res.status(403).json({ erro: 'O usuario não possui permissão'});
+            return res.status(403).json({ error: 'O usuário não possui permissão' });
         }
     }
 }
