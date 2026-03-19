@@ -1,7 +1,7 @@
 // prisma/seed.js
 import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
 import bcrypt from 'bcrypt';
+const prisma = new PrismaClient();
 
 // Helpers idempotentes (usam únicos `nome`)
 async function upsertRole({ nome, descricao }) {
@@ -92,26 +92,40 @@ async function main() {
   await connectRoleToGroup({ groupId: groups['Usuários'].id, roleId: roles.VIEWER.id });
   await connectRoleToGroup({ groupId: groups['Usuários'].id,        roleId: roles.POBRE.id });
 
-  // 4) (Opcional) Vincula Users a Groups
-  // Se já existir User com id 1 e 2, por exemplo:
+  // 4) Vincula Users a Groups
 
-  const hash = await bcrypt.hash("123456", 10);
-  
-  const u = await prisma.user.create({
-      data: { 
-           
-          email: 'john4@gmail.com', 
-          pass: hash,
-          name: 'John',   
-          cpf: '18945878911', 
-          phone: '(16) 99618-4985',
-          endereco:'1763 Rua Dona Alexandrina · São Carlos, São Paulo'
-
-      }
+  // -- Admin padrão do sistema --
+  const hashAdmin = await bcrypt.hash('Admim@123', 10);
+  const admin = await prisma.user.upsert({
+    where: { email: 'admin@pet.com' },
+    update: { pass: hashAdmin, name: 'Admim' },
+    create: {
+      email: 'admin@pet.com',
+      pass: hashAdmin,
+      name: 'Admim',
+      cpf: null,
+      phone: null,
+      endereco: null
+    }
   });
-  try {
-    await connectUserToGroup({ userId: u.id, groupId: groups['Administrador'].id });
-  } catch {}
+  await connectUserToGroup({ userId: admin.id, groupId: groups['Administrador'].id });
+  console.log(`Admin criado/atualizado: ${admin.email} (id=${admin.id})`);
+
+  // -- Usuário de exemplo --
+  const hashJohn = await bcrypt.hash('123456', 10);
+  const u = await prisma.user.upsert({
+    where: { email: 'john4@gmail.com' },
+    update: {},
+    create: {
+      email: 'john4@gmail.com',
+      pass: hashJohn,
+      name: 'John',
+      cpf: '18945878911',
+      phone: '(16) 99618-4985',
+      endereco: '1763 Rua Dona Alexandrina · São Carlos, São Paulo'
+    }
+  });
+  await connectUserToGroup({ userId: u.id, groupId: groups['Usuários'].id });
 
   console.log('Seed concluído com Roles, Groups, RoleGroup e GroupUser');
 }
