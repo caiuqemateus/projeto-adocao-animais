@@ -35,37 +35,40 @@ function validaSenha(senha) {
 
 export const UserController= {
     async store(req, res, next){
-        try{
-            const {email, pass, name,  cpf, phone, endereco } = req.body;
+  try{
+    const { email, senha, nome, cpf, telefone, endereco } = req.body;
 
-            if (!validaCPF(cpf)) {
-                return res.status(400).json({ error: "CPF inválido" });
-            }
-            if (!validaSenha(pass)) {
-              return res.status(400).json({
-              error: "A senha deve ter no mínimo 6 caracteres e um caractere especial"
-            });
-            }
-            const hash = await bcrypt.hash(pass, 10);
-            // Marcius falou que quando for cadastrar um usuario que pertence a uma ong tem que criar o usergroup passando ong
-            const u = await prisma.user.create({
-                data: { 
-                     
-                    email, 
-                    pass: hash,
-                    name,   
-                    cpf, 
-                    phone,
-                    endereco
+    // valida senha
+    if (!validaSenha(senha)) {
+      return res.status(400).json({
+        error: "A senha deve ter no mínimo 6 caracteres e um caractere especial"
+      });
+    }
 
-                }
-            });
-          
-            res.status(201).json(u);
-        }catch(err){
-            next(err);
-        }
-    },
+    // valida CPF só se vier
+    if (cpf && !validaCPF(cpf)) {
+      return res.status(400).json({ error: "CPF inválido" });
+    }
+
+    const hash = await bcrypt.hash(senha, 10);
+
+    const u = await prisma.user.create({
+      data: { 
+        email, 
+        pass: hash,
+        name: nome,   
+        cpf: cpf || null, 
+        phone: telefone || null,
+        endereco: endereco || null
+      }
+    });
+
+    res.status(201).json(u);
+
+  }catch(err){
+    next(err);
+  }
+},
     async index(req, res, next){
         let query = {}
 

@@ -1,41 +1,47 @@
 import prisma from '../prisma.js';
+
 /*
 isso aq é para validar, precisa do token, tem colocar isso na parte que vai precisar de token e na mesma parte na rota
 if(!req.logado.id){
     return res.status(301).json({ error: "Usuário não logado" })
 }
 */
-//nome da funcao (recebendo,responder,proximo)
+
 export const ShelterController= {
     async store(req, res, next){
         try{
-            const {nome, cnpj, endereco, telefone, responsavel, urlImage, isActive } = req.body;
+            const { nome, cnpj, endereco, telefone, responsavel, urlImage, isActive } = req.body;
 
-            if(endereco.length > 244){
-                res.status(401).json({'erro':"Quantidade de caracteres do endereço ultrapassam 244"})
-            };
+            // ✅ CORREÇÃO: só valida se existir
+            if (endereco && endereco.length > 244){
+                return res.status(400).json({
+                  erro: "Quantidade de caracteres do endereço ultrapassam 244"
+                });
+            }
 
             const s = await prisma.shelter.create({
                 data: { 
                     nome, 
                     cnpj,
-                    endereco,   
-                    telefone, 
-                    responsavel,
-                    urlImage,
-                    isActive
+                    endereco: endereco || null,   
+                    telefone: telefone || null, 
+                    responsavel: responsavel || null,
+                    urlImage: urlImage || null,
+                    isActive: isActive ?? true
                 }
             });
           
             res.status(201).json(s);
+
         }catch(err){
             next(err);
         }
     },
+
     async index(req, res, next){
         let query = {}
 
-        if (req.query.nome) query.nome = {contains: req.query.nome}
+        if (req.query.nome) query.nome = { contains: req.query.nome }
         if (req.query.isActive) query.isActive = req.query.isActive === 'true'
 
         const shelters = await prisma.shelter.findMany({
@@ -50,38 +56,42 @@ export const ShelterController= {
 
     async show(req, res, _next){
         try{
-            const id = Number( req.params.id)
+            const id = Number(req.params.id)
+
             if(!req.logado.id){
-                return res.status(301).json({ error: "Usuário não logado" })
+                return res.status(401).json({ error: "Usuário não logado" })
             }
+
             let s = await prisma.shelter.findFirstOrThrow({
-                where: {id},
+                where: { id },
                 include: {
                     animals: true
                 }
             })
 
             res.status(200).json(s)
+
         }catch(err){
-            res.status(404).json({error:"Não encontrado"});
+            res.status(404).json({ error: "Não encontrado" });
         }
     },
 
     async del(req, res, _next){
         try{
-            const id = Number( req.params.id)
+            const id = Number(req.params.id)
 
-            const s = await prisma.shelter.delete({where: {id}})
+            const s = await prisma.shelter.delete({ where: { id } })
 
             res.status(200).json(s)
+
         }catch(err){
-            res.status(404).json({error:"Não encontrado"});
+            res.status(404).json({ error: "Não encontrado" });
         }
     },
 
     async upd(req, res, _next){
         try{
-            const id = Number( req.params.id)
+            const id = Number(req.params.id)
 
             let body = {};
 
@@ -99,9 +109,9 @@ export const ShelterController= {
             });
 
             res.status(200).json(s)
+
         }catch(err){
-            res.status(404).json({error:"Não encontrado"});
+            res.status(404).json({ error: "Não encontrado" });
         }
     },
-}            
-
+}
