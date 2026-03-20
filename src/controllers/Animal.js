@@ -1,20 +1,20 @@
-import prisma from '../prisma.js'
+import prisma from '../prisma.js';
 export const AnimalController = {
     async store(req, res, next){
         try{
-            const {nome, especie, vacinado, castrado, porte, foto, raca, idade, sexo, descricao, disponivel, userId, shelterId } = req.body;
+            const {nome, especie, vacinado, castrado, porte, foto, raca, idade, sexo, descricao, disponivel, shelterId } = req.body;
+            let { userId } = req.body;
             
-            if(descricao.length > 244){
-                res.status(401).json({'erro':"Quantidade de caracteres da descroção ultrapassam 244"})
-            };
-
-            if(!userId){
-                userId = req.logado.id
+            if(descricao && descricao.length > 244){
+                return res.status(400).json({'erro':"Quantidade de caracteres da descrição ultrapassam 244"});
             }
 
-            
+            if(!userId){
+                userId = req.logado.id;
+            }
+
             if ((!userId && !shelterId) || (userId && shelterId)){
-                res.status(301).json({ error: "Cadastre apenas como ONG ou apenas como Usuário" });
+                return res.status(400).json({ error: "Cadastre apenas como ONG ou apenas como Usuário" });
             }
 
             let u = null;
@@ -24,24 +24,23 @@ export const AnimalController = {
                 });
 
                 if(!u){
-                    res.status(400).json({ error: "Usuário informado não existe" });
-                    return;
+                    return res.status(400).json({ error: "Usuário informado não existe" });
                 }
             }
 
             let data = {
                 nome,
-                foto,
+                foto: foto || '',
                 especie,
-                porte,
-                raca,  
-                idade,
-                castrado,
-                vacinado,
-                sexo,
-                descricao,
-                disponivel,
-                userId
+                porte: porte || null,
+                raca: raca || '',
+                idade: idade ? Number(idade) : null,
+                castrado: castrado === true || castrado === 'true',
+                vacinado: vacinado === true || vacinado === 'true',
+                sexo: sexo || null,
+                descricao: descricao || null,
+                disponivel: disponivel === false || disponivel === 'false' ? false : true,
+                userId: Number(userId)
             }
 
             let s = null;
@@ -51,8 +50,7 @@ export const AnimalController = {
                 });
 
                 if(!s){
-                    res.status(400).json({ error: "Abrigo informado não existe" });
-                    return;
+                    return res.status(400).json({ error: "Abrigo informado não existe" });
                 }
 
                 data.shelterId = Number(shelterId)
