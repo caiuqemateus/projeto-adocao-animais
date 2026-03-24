@@ -5,7 +5,7 @@
 
 ---
 
-## 1. Header e Rodapé (Navegação)
+## 1. Header e Rodapé (Navegação) **João ( Concluido ✔ ) **
 
 - 🟡 **Header** — Remover botões que poluem a interface: **Animais Favoritos** e **Sobre** devem ser removidos da barra principal e reposicionados (ex: menu lateral, rodapé ou perfil do usuário)
 - 🟡 **Rodapé** — Remover ou desativar botões/links que não têm função implementada
@@ -14,7 +14,7 @@
 
 ---
 
-## 2. Fale Conosco
+## 2. Fale Conosco **João**
 
 - 🔴 **UI** — Redesenhar completamente a interface da página. O design atual não combina com o restante do site
 - 🔴 **Formulário quebrado** — O formulário usa variáveis locais (`let`) em vez de `useState`, não captura os dados digitados e nunca envia nada para a API — apenas exibe um `alert()`. Precisa ser reescrito
@@ -24,14 +24,14 @@
 
 ---
 
-## 3. Página Sobre
+## 3. Página Sobre **João**
 
 - 🟡 **Conteúdo** — A página **não foi atualizada há mais de 5 meses**. Revisar e completar o conteúdo institucional
 - 🔴 **Layout** — Header e Footer estão **ausentes** na página. Adicionar os componentes de navegação
 
 ---
 
-## 4. Tela de ONGs (nova)
+## 4. Tela de ONGs (nova) **João**
 
 - 🟡 **Criar tela de listagem de ONGs** — Ainda não foi feito nem planejado. Criar uma página pública listando as ONGs cadastradas com seus respectivos animais
 - 🟡 **Criar tela de perfil de ONG** — Página individual para cada ONG com informações, animais disponíveis e forma de contato
@@ -39,7 +39,7 @@
 
 ---
 
-## 5. Tela de Adoção / Animais
+## 5. Tela de Adoção / Animais **João**
 
 - 🟡 **Popular o banco de dados** — Cadastrar entre **100 e 200 animais** reais para simular um site funcional
 - 🟡 **Criar ONGs de teste** — Cadastrar no mínimo **5 ONGs diferentes**, cada uma com seus próprios animais, para simular um ambiente real de adoção
@@ -51,7 +51,7 @@
 
 ---
 
-## 6. Cadastro de Animal (Modal / Tela)
+## 6. Cadastro de Animal (Modal / Tela) **João**
 
 - 🟡 **UI** — Atualizar o design do modal/tela de cadastro de animal
 - 🟡 **Múltiplas fotos** — Adicionar suporte para cadastrar mais de uma foto por animal
@@ -73,7 +73,7 @@
 
 ---
 
-## 8. Perfil do Animal
+## 8. Perfil do Animal **João**
 
 - 🔴 **Botão "Entrar em Contato"** — O botão está presente mas **não funciona**. Implementar ação (ex: redirecionar para Fale Conosco, abrir modal com dados da ONG, ou enviar email)
 - 🟡 **Tags de Personalidade** — Após implementar o campo de personalidade no cadastro, exibi-las no perfil do animal
@@ -100,7 +100,7 @@
 
 ---
 
-## 11. Dark Mode (Modo Escuro)
+## 11. Dark Mode (Modo Escuro) **João**
 
 - 🔴 **Telas sem suporte a dark mode** — Implementar dark mode nas seguintes telas:
   - Gerenciar Usuários (`/admin/users`)
