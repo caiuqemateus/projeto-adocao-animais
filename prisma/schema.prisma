@@ -109,6 +109,8 @@ model Shelter {
 
   status    Boolean   @default(true)
 
+  mensages   String[]
+
   createdAt   DateTime  @default(now())
 
   updatedAt   DateTime  @updatedAt
