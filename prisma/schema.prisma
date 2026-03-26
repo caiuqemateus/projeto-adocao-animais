@@ -28,9 +28,12 @@ model User {
 
   endereco  String?
 
+  status  Boolean @default(true) 
+
   createdAt DateTime  @default(now())
 
   updatedAt DateTime  @updatedAt
+
  
   // Relações
   animais   Animal[]
@@ -104,7 +107,7 @@ model Shelter {
 
   urlImage    String[]
 
-  isActive    Boolean   @default(true)
+  status    Boolean   @default(true)
 
   createdAt   DateTime  @default(now())
 
