@@ -7,8 +7,8 @@ import path from 'path';
 import adoptionRoutes from './routes/adoption.js';
 import animalRoutes from './routes/animal.js';
 import shelterRoutes from './routes/shelter.js';
+import uploadRoutes from './routes/upload.js';
 import userRoutes from './routes/user.js';
-import uploadRoutes from './routes/upload.ts';
 
 import { verificaToken } from './middlewares/auth.js';
 
