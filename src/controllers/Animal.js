@@ -30,7 +30,7 @@ export const AnimalController = {
 
             let data = {
                 nome,
-                foto: foto || '',
+                foto: Array.isArray(foto) ? foto : (foto ? [foto] : []),
                 especie,
                 porte: porte || null,
                 raca: raca || '',
