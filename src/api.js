@@ -1,18 +1,25 @@
 import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
+import path from 'path';
+
 
 import adoptionRoutes from './routes/adoption.js';
 import animalRoutes from './routes/animal.js';
 import shelterRoutes from './routes/shelter.js';
 import userRoutes from './routes/user.js';
+import uploadRoutes from './routes/upload.ts';
 
 import { verificaToken } from './middlewares/auth.js';
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000'
+}));
 app.use(express.json());
 
+app.use('/uploads', express.static(path.resolve('uploads')));
+app.use('/upload', uploadRoutes);
 app.use('/users',userRoutes);
 app.use('/animals',animalRoutes);
 app.use('/shelters',shelterRoutes);

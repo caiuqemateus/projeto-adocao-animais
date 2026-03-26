@@ -58,7 +58,7 @@ model Animal {
 
   descricao String?
 
-  foto      String
+  foto      String[]
 
   vacinado Boolean
 
@@ -102,7 +102,7 @@ model Shelter {
 
   responsavel String?
 
-  urlImage    String?
+  urlImage    String[]
 
   isActive    Boolean   @default(true)
 
