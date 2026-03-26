@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt'; 
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import prisma from '../prisma.js';
 
@@ -200,18 +200,28 @@ export const UserController = {
   async me(req, res) {
     try {
       const user = await prisma.user.findUnique({
-        where: { id: req.logado.id }
+        where: { id: req.logado.id },
+        include: {
+          group: {
+            include: {
+              group: { select: { nome: true } }
+            }
+          }
+        }
       });
 
       if (!user) {
         return res.status(404).json({ error: "Usuário não encontrado" });
       }
 
+      const groups = user.group.map((g) => g.group.nome);
+
       res.json({
         id: user.id,
         email: user.email,
         nome: user.name,
-        status: user.status // 🔥 inclui status
+        status: user.status,
+        groups,
       });
 
     } catch (error) {
