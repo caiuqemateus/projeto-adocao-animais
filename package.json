@@ -12,7 +12,7 @@
     "push": "prisma db push",
     "generate": "prisma generate",
     "studio": "prisma studio",
-    "test": "echo \"No Tests\""
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [],
   "author": "",
@@ -33,7 +33,9 @@
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/multer": "^2.1.0",
+    "jest": "^30.3.0",
     "nodemon": "^3.1.10",
-    "prisma": "^6.16.3"
+    "prisma": "^6.16.3",
+    "supertest": "^7.2.2"
   }
 }
