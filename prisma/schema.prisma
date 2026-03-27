@@ -61,6 +61,10 @@ model Animal {
 
   descricao String?
 
+  comoAdotar String?
+
+  tags       String[]
+
   foto      String[]
 
   vacinado Boolean

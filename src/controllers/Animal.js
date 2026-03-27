@@ -2,7 +2,7 @@ import prisma from '../prisma.js';
 export const AnimalController = {
     async store(req, res, next){
         try{
-            const {nome, especie, vacinado, castrado, porte, foto, raca, idade, sexo, descricao, disponivel, shelterId } = req.body;
+            const {nome, especie, vacinado, castrado, porte, foto, raca, idade, sexo, descricao, disponivel, shelterId, tags, comoAdotar } = req.body;
             let { userId } = req.body;
             
             if(descricao && descricao.length > 244){
@@ -39,6 +39,8 @@ export const AnimalController = {
                 vacinado: vacinado === true || vacinado === 'true',
                 sexo: sexo || null,
                 descricao: descricao || null,
+                comoAdotar: comoAdotar || null,
+                tags: Array.isArray(tags) ? tags : [],
                 disponivel: disponivel === false || disponivel === 'false' ? false : true,
                 userId: Number(userId)
             }
