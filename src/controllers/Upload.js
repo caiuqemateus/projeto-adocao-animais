@@ -1,8 +1,7 @@
-import { Request, Response } from "express";''
 
-export const uploadController = async (req: Request, res: Response) => {
+export const uploadController = async (req, res) => {
   try {
-    const files = req.files as Express.Multer.File[];
+    const files = req.files
 
     if (!files || files.length === 0) {
       return res.status(400).json({ error: "Nenhuma imagem enviada" });

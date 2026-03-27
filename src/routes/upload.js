@@ -2,7 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
-import { uploadController } from "../controllers/Upload.ts";
+import { uploadController } from "../controllers/Upload.js";
 
 const router = Router();
 
