@@ -1,8 +1,8 @@
 import { Router } from "express";
 import multer from "multer";
-import path from "path";
 import { v4 as uuidv4 } from "uuid";
-import { uploadController } from "../controllers/Upload.js";
+import path from "path";
+import { uploadController } from "../controllers/Upload.ts";
 
 const router = Router();
 

@@ -1,5 +1,4 @@
-import type { Request, Response } from "express";
-import prisma from "../prisma.js";
+import { Request, Response } from "express";''
 
 export const uploadController = async (req: Request, res: Response) => {
   try {
