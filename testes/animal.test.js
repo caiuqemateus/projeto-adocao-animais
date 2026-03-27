@@ -4,7 +4,7 @@ import app from '../src/api.js';
 describe('Testes do Modelo Animal', () => {
 
   
-  it('CT-ANIMAL-01 - Criar animal com sucesso', async () => {
+  it('CT-ANIMAL-01 - Criar animal sem autenticação', async () => {
     const res = await request(app)
       .post('/animals')
       .send({
