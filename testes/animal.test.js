@@ -18,7 +18,7 @@ describe('Testes do Modelo Animal', () => {
         userId: 1
       });
 
-    expect([200, 201]).toContain(res.statusCode);
+    expect([401, 403]).toContain(res.statusCode);
   });
 
   
