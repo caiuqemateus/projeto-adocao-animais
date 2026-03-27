@@ -7,7 +7,7 @@ describe("Testes do Modelo User", () => {
     const res = await request(app)
       .post("/users")
       .send({
-        email: `teste${Date.now()}@pet.com`, // 🔥 evita duplicado
+        email: `teste${Date.now()}@pet.com`, // evita duplicado
         senha: "123@456",
         nome: "Teste"
       });
