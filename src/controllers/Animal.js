@@ -135,7 +135,9 @@ export const AnimalController = {
             if (req.body.idade) body.idade = req.body.idade
             if (req.body.sexo) body.sexo = req.body.sexo
             if (req.body.descricao) body.descricao = req.body.descricao
-            if (req.body.status) body.status = req.body.status
+            if (req.body.disponivel !== undefined) {
+             body.disponivel = req.body.disponivel === true || req.body.disponivel === 'true';
+            }
             if (req.body.shelterId) body.shelterId = req.body.shelterId
  
             const a = await prisma.animal.update({
