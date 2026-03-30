@@ -26,8 +26,8 @@ export const ShelterController= {
                     endereco: endereco || null,   
                     telefone: telefone || null, 
                     responsavel: responsavel || null,
-                    urlImage: urlImage || null,
-                    isActive: isActive ?? true
+                    urlImage: Array.isArray(urlImage) ? urlImage : (urlImage ? [urlImage] : []),
+                    status: isActive ?? true
                 }
             });
           
@@ -42,7 +42,7 @@ export const ShelterController= {
         let query = {}
 
         if (req.query.nome) query.nome = { contains: req.query.nome }
-        if (req.query.isActive) query.isActive = req.query.isActive === 'true'
+        if (req.query.status) query.status = req.query.status === 'true'
 
         const shelters = await prisma.shelter.findMany({
             where: query,
