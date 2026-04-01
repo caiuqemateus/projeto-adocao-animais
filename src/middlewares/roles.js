@@ -8,6 +8,11 @@ export function verificaRole(requiredRole){
             const userId = req.logado?.id;
             if(!userId) return res.status(401).json({ error: 'Não autenticado' });
 
+            // ONGs (shelters) passam direto — elas têm credenciais próprias
+            if (req.logado.tipo === 'shelter') {
+                return next();
+            }
+
             const vinculo = await prisma.roleGroups.findFirst({
                 where: {
                     role: { nome: { in: need }},

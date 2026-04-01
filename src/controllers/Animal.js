@@ -2,8 +2,8 @@ import prisma from '../prisma.js';
 export const AnimalController = {
     async store(req, res, next){
         try{
-            const {nome, especie, vacinado, castrado, porte, foto, raca, idade, sexo, descricao, disponivel, shelterId, tags, comoAdotar } = req.body;
-            let { userId } = req.body;
+            const {nome, especie, vacinado, castrado, porte, foto, raca, idade, sexo, descricao, disponivel, tags, comoAdotar } = req.body;
+            let { userId, shelterId } = req.body;
             
             if(descricao && descricao.length > 244){
                 return res.status(400).json({'erro':"Quantidade de caracteres da descrição ultrapassam 244"});
@@ -46,7 +46,10 @@ export const AnimalController = {
                 comoAdotar: comoAdotar || null,
                 tags: Array.isArray(tags) ? tags : [],
                 disponivel: disponivel === false || disponivel === 'false' ? false : true,
-                userId: Number(userId)
+            }
+
+            if (userId) {
+                data.userId = Number(userId);
             }
 
             let s = null;

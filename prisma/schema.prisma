@@ -79,13 +79,13 @@ model Animal {
  
   // FKs
 
-  userId    Int
+  userId    Int?
 
   shelterId Int?
  
   // Relações
 
-  user      User     @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id])
 
   shelter   Shelter? @relation(fields: [shelterId], references: [id])
 
