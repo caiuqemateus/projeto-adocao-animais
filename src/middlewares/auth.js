@@ -12,7 +12,8 @@ export function verificaToken(req, res, next){
         req.logado = { 
             id: payload.sub, 
             email: payload.email, 
-            nome: payload.name
+            nome: payload.name,
+            tipo: payload.tipo || 'usuario'
         };
     return next();
     }catch (e){

@@ -101,11 +101,15 @@ model Shelter {
 
   nome        String
 
+  email       String?   @unique
+
+  pass        String?
+
   cnpj        String?   @unique
 
   endereco    String?
 
-  telefone    String
+  telefone    String?
 
   responsavel String?
 

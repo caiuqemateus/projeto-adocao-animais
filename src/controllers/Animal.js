@@ -9,8 +9,12 @@ export const AnimalController = {
                 return res.status(400).json({'erro':"Quantidade de caracteres da descrição ultrapassam 244"});
             }
 
-            if(!userId){
-                userId = req.logado.id;
+            if (!userId && !shelterId) {
+                if (req.logado.tipo === 'shelter') {
+                    shelterId = req.logado.id;
+                } else {
+                    userId = req.logado.id;
+                }
             }
 
             if ((!userId && !shelterId) || (userId && shelterId)){
@@ -77,6 +81,7 @@ export const AnimalController = {
         if (req.query.status) query.status = req.query.status
         if (req.query.vacinado) query.vacinado = req.query.vacinado
         if (req.query.castrado) query.castrado = req.query.castrado
+        if (req.query.shelterId) query.shelterId = Number(req.query.shelterId)
  
         const animals = await prisma.animal.findMany({
             where: query,

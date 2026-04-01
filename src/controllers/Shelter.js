@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import prisma from '../prisma.js';
 
 /*
@@ -10,7 +12,15 @@ if(!req.logado.id){
 export const ShelterController= {
     async store(req, res, next){
         try{
-            const { nome, cnpj, endereco, telefone, responsavel, urlImage, isActive } = req.body;
+            const { nome, cnpj, endereco, telefone, responsavel, urlImage, isActive, email, senha } = req.body;
+
+            if (!email || !senha) {
+                return res.status(400).json({ error: "Email e senha são obrigatórios" });
+            }
+
+            if (senha.length < 6) {
+                return res.status(400).json({ error: "A senha deve ter no mínimo 6 caracteres" });
+            }
 
             // ✅ CORREÇÃO: só valida se existir
             if (endereco && endereco.length > 244){
@@ -19,9 +29,13 @@ export const ShelterController= {
                 });
             }
 
+            const hash = await bcrypt.hash(senha, 10);
+
             const s = await prisma.shelter.create({
                 data: { 
                     nome, 
+                    email,
+                    pass: hash,
                     cnpj,
                     endereco: endereco || null,   
                     telefone: telefone || null, 
@@ -112,6 +126,75 @@ export const ShelterController= {
 
         }catch(err){
             res.status(404).json({ error: "Não encontrado" });
+        }
+    },
+
+    async login(req, res, next) {
+        try {
+            const { email, senha } = req.body;
+
+            const s = await prisma.shelter.findFirst({
+                where: { email }
+            });
+
+            if (!s) {
+                return res.status(404).json({ error: "Nenhuma ONG encontrada com esse e-mail" });
+            }
+
+            if (s.status === false) {
+                return res.status(403).json({ error: "ONG desativada" });
+            }
+
+            if (!s.pass) {
+                return res.status(403).json({ error: "Esta ONG não possui senha cadastrada" });
+            }
+
+            const ok = await bcrypt.compare(senha, s.pass);
+            if (!ok) {
+                return res.status(401).json({ error: "Credenciais inválidas" });
+            }
+
+            const token = jwt.sign(
+                { sub: s.id, email: s.email, name: s.nome, tipo: 'shelter' },
+                process.env.JWT_SECRET,
+                { expiresIn: '8h' }
+            );
+
+            return res.json({
+                token,
+                shelter: {
+                    id: s.id,
+                    email: s.email,
+                    nome: s.nome,
+                    cnpj: s.cnpj,
+                    telefone: s.telefone,
+                    endereco: s.endereco,
+                    urlImage: s.urlImage
+                }
+            });
+
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    async me(req, res, next) {
+        try {
+            const id = Number(req.logado.id);
+            const s = await prisma.shelter.findFirstOrThrow({ where: { id } });
+
+            res.json({
+                id: s.id,
+                nome: s.nome,
+                email: s.email,
+                cnpj: s.cnpj,
+                telefone: s.telefone,
+                endereco: s.endereco,
+                urlImage: s.urlImage,
+                status: s.status
+            });
+        } catch (err) {
+            res.status(404).json({ error: "ONG não encontrada" });
         }
     },
 }

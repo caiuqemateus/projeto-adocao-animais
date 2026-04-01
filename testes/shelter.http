@@ -3,16 +3,26 @@
 ### Criar abrigo
 POST http://localhost:4000/shelters
 Content-Type: application/json
-Authorization: Bearer {{token}}
 
 {
   "nome": "Alegria",
+  "email": "ong.alegria@gmail.com",
+  "senha": "Alegria@123",
   "cnpj": "12.366.678/0001-90",
   "endereco": "Episcopal, 458",
   "telefone": "(11) 4433-4444",
   "responsavel": "",
   "urlImage": "https://exemplo.com/abrigo.jpg",
-  "isActive": false
+  "isActive": true
+}
+
+### Login da ONG
+POST http://localhost:4000/shelters/login
+Content-Type: application/json
+
+{
+  "email": "ong.alegria@gmail.com",
+  "senha": "Alegria@123"
 }
 
 ### Listar todos os abrigos
