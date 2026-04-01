@@ -1,12 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import prisma from '../prisma.js';
-/*
-isso aq é para validar, precisa do token, tem colocar isso na parte que vai precisar de token e na mesma parte na rota
-if(!req.logado.id){
-    return res.status(301).json({ error: "Usuário não logado" })
-}
-*/
+import { logAudit } from '../helpers/audit.js';
 
 export const ShelterController= {
 
@@ -42,15 +37,21 @@ export const ShelterController= {
                     urlImage: Array.isArray(urlImage)
                         ? urlImage
                         : (urlImage ? [urlImage] : []),
-                    
-                    // 🔥 mantém padrão do banco
                     status: isActive ?? true
                 }
+            });
+
+            // 🔥 AUDITORIA CREATE
+            await logAudit({
+                action: "CREATE",
+                entity: "SHELTER",
+                entityId: s.id,
+                user: req.logado
             });
           
             res.status(201).json({
                 ...s,
-                isActive: s.status // 🔥 padroniza pro front
+                isActive: s.status
             });
 
         }catch(err){
@@ -69,7 +70,6 @@ export const ShelterController= {
                 }
             }
 
-            // 🔥 traduz filtro
             if (req.query.isActive) {
                 query.status = req.query.isActive === 'true'
             }
@@ -81,7 +81,6 @@ export const ShelterController= {
                 }
             })
 
-            // 🔥 converte status → isActive
             const formatted = shelters.map(s => ({
                 ...s,
                 isActive: s.status
@@ -125,6 +124,14 @@ export const ShelterController= {
 
             const s = await prisma.shelter.delete({ where: { id } })
 
+            // 🔥 AUDITORIA DELETE
+            await logAudit({
+                action: "DELETE",
+                entity: "SHELTER",
+                entityId: id,
+                user: req.logado
+            });
+
             res.status(200).json(s)
 
         }catch{
@@ -150,14 +157,24 @@ export const ShelterController= {
                     : [req.body.urlImage]
             }
 
-            // 🔥 CORREÇÃO PRINCIPAL (botão ativar)
+            let action = "UPDATE";
+
             if (req.body.isActive !== undefined) {
-                body.status = req.body.isActive
+                body.status = req.body.isActive;
+                action = req.body.isActive ? "ACTIVATE" : "DEACTIVATE";
             }
 
             const s = await prisma.shelter.update({
                 where: { id },
                 data: body
+            });
+
+            // 🔥 AUDITORIA UPDATE / STATUS
+            await logAudit({
+                action,
+                entity: "SHELTER",
+                entityId: id,
+                user: req.logado
             });
 
             res.status(200).json({
@@ -183,7 +200,6 @@ export const ShelterController= {
                 return res.status(404).json({ error: "Nenhuma ONG encontrada com esse e-mail" });
             }
 
-            // 🔥 usa status do banco
             if (s.status === false) {
                 return res.status(403).json({ error: "ONG desativada" });
             }
@@ -214,7 +230,7 @@ export const ShelterController= {
                     telefone: s.telefone,
                     endereco: s.endereco,
                     urlImage: s.urlImage,
-                    isActive: s.status // 🔥 padroniza pro front
+                    isActive: s.status
                 }
             });
 
@@ -237,7 +253,7 @@ export const ShelterController= {
                 telefone: s.telefone,
                 endereco: s.endereco,
                 urlImage: s.urlImage,
-                isActive: s.status // 🔥 padroniza
+                isActive: s.status
             });
 
         } catch {

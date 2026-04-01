@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import prisma from '../prisma.js';
+import { logAudit } from '../helpers/audit.js';
 
 function validaCPF(input) {
   const cpf = String(input).replace(/\D+/g, '');
@@ -54,18 +55,28 @@ export const UserController = {
           cpf: cpf || null,
           phone: telefone || null,
           endereco: endereco || null,
-          status: true // 🔥 renomeado para 'status'
+          status: true
         }
       });
 
+      // 🔥 AUDITORIA (CRIAR USUÁRIO)
+      await logAudit({
+       action: "CREATE",
+        entity: "USER",
+        entityId: u.id,
+        user: {
+          id: u.id,
+          email: u.email,
+         tipo: "USER"
+      }
+});
       res.status(201).json(u);
 
     } catch (err) {
       next(err);
     }
   },
-
-  async index(req, res) {
+   async index(req, res) {
     let query = {};
 
     if (req.query.name) {
@@ -102,6 +113,14 @@ export const UserController = {
         where: { id }
       });
 
+      // 🔥 AUDITORIA (DELETAR)
+      await logAudit({
+        action: "DELETE",
+        entity: "USER",
+        entityId: id,
+        userEmail: req.logado?.email
+      });
+
       res.status(200).json(u);
 
     } catch (err) {
@@ -117,7 +136,6 @@ export const UserController = {
       if (req.body.name) body.name = req.body.name;
       if (req.body.email) body.email = req.body.email;
 
-      // 🔥 atualiza status
       if (req.body.status !== undefined) {
         body.status = req.body.status;
       }
@@ -148,6 +166,14 @@ export const UserController = {
         data: body
       });
 
+      // 🔥 AUDITORIA (UPDATE)
+      await logAudit({
+        action: "UPDATE",
+        entity: "USER",
+        entityId: id,
+        userEmail: req.logado?.email
+      });
+
       res.status(200).json(u);
 
     } catch (err) {
@@ -167,7 +193,6 @@ export const UserController = {
         return res.status(404).json({ error: "Não tem um usuário com esse e-mail" });
       }
 
-      // 🔥 BLOQUEIA LOGIN SE INATIVO
       if (u.status === false) {
         return res.status(403).json({ error: "Usuário desativado" });
       }
@@ -196,7 +221,6 @@ export const UserController = {
       next(e);
     }
   },
-
   async me(req, res) {
     try {
       const user = await prisma.user.findUnique({

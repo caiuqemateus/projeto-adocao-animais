@@ -9,6 +9,7 @@ import animalRoutes from './routes/animal.js';
 import shelterRoutes from './routes/shelter.js';
 import uploadRoutes from './routes/upload.js';
 import userRoutes from './routes/user.js';
+import auditRoutes from './routes/audit.routes.js';
 
 import { verificaToken } from './middlewares/auth.js';
 
@@ -24,6 +25,7 @@ app.use('/users',userRoutes);
 app.use('/animals',animalRoutes);
 app.use('/shelters',shelterRoutes);
 app.use('/adoptions',verificaToken, adoptionRoutes);
+app.use('/audit', auditRoutes);
 
 
 //Middleware de erro simples

@@ -1,4 +1,5 @@
 import prisma from '../prisma.js';
+import { logAudit } from '../helpers/audit.js';
 export const AnimalController = {
     async store(req, res, next){
         try{
@@ -69,6 +70,14 @@ export const AnimalController = {
             const a = await prisma.animal.create({
                 data: data
             });
+
+            // 🔥 AUDITORIA (CRIAR)
+            await logAudit({
+                action: "CREATE",
+                entity: "ANIMAL",
+                entityId: a.id,
+                user: req.logado
+            });
          
             res.status(201).json(a);
         }catch(err){
@@ -121,6 +130,14 @@ export const AnimalController = {
             const id = Number( req.params.id)
  
             const a = await prisma.animal.delete({where: {id}})
+
+             // 🔥 AUDITORIA (DELETAR)
+            await logAudit({
+                action: "DELETE",
+                entity: "ANIMAL",
+                entityId: id,
+                user: req.logado
+            });
  
             res.status(200).json(a)
         }catch(err){
@@ -151,6 +168,14 @@ export const AnimalController = {
             const a = await prisma.animal.update({
                 where: { id },
                 data: body
+            });
+
+            // 🔥 AUDITORIA (UPDATE)
+            await logAudit({
+                action: "UPDATE",
+                entity: "ANIMAL",
+                entityId: id,
+                user: req.logado
             });
  
             res.status(200).json(a)

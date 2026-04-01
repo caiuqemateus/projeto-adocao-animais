@@ -207,3 +207,25 @@ roleId Int
 
 @@unique([groupId, roleId], name: "groupId_roleId")
 }
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  action    String
+  entity    String
+  entityId  Int
+
+  userId    Int?
+  userEmail String?
+  userType  String?
+
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String
+  mensagem  String
+  resposta  String?
+  createdAt DateTime @default(now())
+}
