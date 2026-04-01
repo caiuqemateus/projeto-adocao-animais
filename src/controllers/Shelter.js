@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import prisma from '../prisma.js';
-
 /*
 isso aq é para validar, precisa do token, tem colocar isso na parte que vai precisar de token e na mesma parte na rota
 if(!req.logado.id){
@@ -10,6 +9,7 @@ if(!req.logado.id){
 */
 
 export const ShelterController= {
+
     async store(req, res, next){
         try{
             const { nome, cnpj, endereco, telefone, responsavel, urlImage, isActive, email, senha } = req.body;
@@ -22,10 +22,9 @@ export const ShelterController= {
                 return res.status(400).json({ error: "A senha deve ter no mínimo 6 caracteres" });
             }
 
-            // ✅ CORREÇÃO: só valida se existir
             if (endereco && endereco.length > 244){
                 return res.status(400).json({
-                  erro: "Quantidade de caracteres do endereço ultrapassam 244"
+                  error: "Quantidade de caracteres do endereço ultrapassam 244"
                 });
             }
 
@@ -40,12 +39,19 @@ export const ShelterController= {
                     endereco: endereco || null,   
                     telefone: telefone || null, 
                     responsavel: responsavel || null,
-                    urlImage: Array.isArray(urlImage) ? urlImage : (urlImage ? [urlImage] : []),
+                    urlImage: Array.isArray(urlImage)
+                        ? urlImage
+                        : (urlImage ? [urlImage] : []),
+                    
+                    // 🔥 mantém padrão do banco
                     status: isActive ?? true
                 }
             });
           
-            res.status(201).json(s);
+            res.status(201).json({
+                ...s,
+                isActive: s.status // 🔥 padroniza pro front
+            });
 
         }catch(err){
             next(err);
@@ -53,26 +59,46 @@ export const ShelterController= {
     },
 
     async index(req, res, next){
-        let query = {}
+        try{
+            let query = {}
 
-        if (req.query.nome) query.nome = { contains: req.query.nome }
-        if (req.query.status) query.status = req.query.status === 'true'
-
-        const shelters = await prisma.shelter.findMany({
-            where: query,
-            include: {
-                animals: true
+            if (req.query.nome) {
+                query.nome = {
+                    contains: req.query.nome,
+                    mode: "insensitive"
+                }
             }
-        })
 
-        res.status(200).json(shelters)
+            // 🔥 traduz filtro
+            if (req.query.isActive) {
+                query.status = req.query.isActive === 'true'
+            }
+
+            const shelters = await prisma.shelter.findMany({
+                where: query,
+                include: {
+                    animals: true
+                }
+            })
+
+            // 🔥 converte status → isActive
+            const formatted = shelters.map(s => ({
+                ...s,
+                isActive: s.status
+            }));
+
+            res.status(200).json(formatted)
+
+        }catch(err){
+            next(err);
+        }
     },
 
-    async show(req, res, _next){
+    async show(req, res){
         try{
             const id = Number(req.params.id)
 
-            if(!req.logado.id){
+            if(!req.logado?.id){
                 return res.status(401).json({ error: "Usuário não logado" })
             }
 
@@ -83,14 +109,17 @@ export const ShelterController= {
                 }
             })
 
-            res.status(200).json(s)
+            res.status(200).json({
+                ...s,
+                isActive: s.status
+            })
 
-        }catch(err){
+        }catch{
             res.status(404).json({ error: "Não encontrado" });
         }
     },
 
-    async del(req, res, _next){
+    async del(req, res){
         try{
             const id = Number(req.params.id)
 
@@ -98,12 +127,12 @@ export const ShelterController= {
 
             res.status(200).json(s)
 
-        }catch(err){
+        }catch{
             res.status(404).json({ error: "Não encontrado" });
         }
     },
 
-    async upd(req, res, _next){
+    async upd(req, res){
         try{
             const id = Number(req.params.id)
 
@@ -114,17 +143,30 @@ export const ShelterController= {
             if (req.body.endereco) body.endereco = req.body.endereco
             if (req.body.telefone) body.telefone = req.body.telefone
             if (req.body.responsavel) body.responsavel = req.body.responsavel
-            if (req.body.urlImage) body.urlImage = req.body.urlImage
-            if (req.body.isActive !== undefined) body.isActive = req.body.isActive
+
+            if (req.body.urlImage) {
+                body.urlImage = Array.isArray(req.body.urlImage)
+                    ? req.body.urlImage
+                    : [req.body.urlImage]
+            }
+
+            // 🔥 CORREÇÃO PRINCIPAL (botão ativar)
+            if (req.body.isActive !== undefined) {
+                body.status = req.body.isActive
+            }
 
             const s = await prisma.shelter.update({
                 where: { id },
                 data: body
             });
 
-            res.status(200).json(s)
+            res.status(200).json({
+                ...s,
+                isActive: s.status
+            })
 
         }catch(err){
+            console.error(err);
             res.status(404).json({ error: "Não encontrado" });
         }
     },
@@ -141,6 +183,7 @@ export const ShelterController= {
                 return res.status(404).json({ error: "Nenhuma ONG encontrada com esse e-mail" });
             }
 
+            // 🔥 usa status do banco
             if (s.status === false) {
                 return res.status(403).json({ error: "ONG desativada" });
             }
@@ -150,6 +193,7 @@ export const ShelterController= {
             }
 
             const ok = await bcrypt.compare(senha, s.pass);
+
             if (!ok) {
                 return res.status(401).json({ error: "Credenciais inválidas" });
             }
@@ -169,7 +213,8 @@ export const ShelterController= {
                     cnpj: s.cnpj,
                     telefone: s.telefone,
                     endereco: s.endereco,
-                    urlImage: s.urlImage
+                    urlImage: s.urlImage,
+                    isActive: s.status // 🔥 padroniza pro front
                 }
             });
 
@@ -178,9 +223,10 @@ export const ShelterController= {
         }
     },
 
-    async me(req, res, next) {
+    async me(req, res) {
         try {
             const id = Number(req.logado.id);
+
             const s = await prisma.shelter.findFirstOrThrow({ where: { id } });
 
             res.json({
@@ -191,10 +237,11 @@ export const ShelterController= {
                 telefone: s.telefone,
                 endereco: s.endereco,
                 urlImage: s.urlImage,
-                status: s.status
+                isActive: s.status // 🔥 padroniza
             });
-        } catch (err) {
+
+        } catch {
             res.status(404).json({ error: "ONG não encontrada" });
         }
     },
-}
+};

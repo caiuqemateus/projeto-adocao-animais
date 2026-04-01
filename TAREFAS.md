@@ -81,7 +81,7 @@
 
 ---
 
-## 9. Painel Administrativo (novo)
+## 9. Painel Administrativo (novo) **Rafaela**
 
 - 🟡 **Nova tela de painel** — Criar uma tela dedicada de painel administrativo (`/admin`) com abas separadas para cada categoria
 - 🟡 **Aba: Gerenciar Usuários** — Criar nova UI com filtros (nome, email, status, role), tabela de usuários, ações de ativar/desativar/deletar
