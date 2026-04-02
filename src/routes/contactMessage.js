@@ -4,14 +4,14 @@ import { verificaToken } from '../middlewares/auth.js';
 
 const route = Router();
 
-// público (fale conosco)
+// público
 route.post('/', ContactMessageController.store);
-
-// 🔥 PRIMEIRO ROTAS ESPECÍFICAS
-route.get('/my', verificaToken, ContactMessageController.myMessages);
 
 // admin
 route.get('/', verificaToken, ContactMessageController.index);
 route.put('/:id/reply', verificaToken, ContactMessageController.reply);
+
+// ✅ ADICIONA ISSO AQUI
+route.delete('/:id', verificaToken, ContactMessageController.delete);
 
 export default route;

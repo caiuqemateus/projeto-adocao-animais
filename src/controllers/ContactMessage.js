@@ -63,19 +63,27 @@ export const ContactMessageController = {
     }
   },
 
-  // 💬 mensagens do usuário
-  async myMessages(req, res) {
-    try {
-      const userId = req.userId;
+  async delete(req, res) {
+  try {
+    const id = Number(req.params.id);
 
-      const messages = await prisma.contactMessage.findMany({
-        where: { userId },
-        orderBy: { createdAt: 'desc' }
-      });
+    const message = await prisma.contactMessage.findUnique({
+      where: { id }
+    });
 
-      res.json(messages);
-    } catch (error) {
-      res.status(500).json({ error: "Erro ao buscar mensagens" });
+    if (!message) {
+      return res.status(404).json({ error: "Mensagem não encontrada" });
     }
+
+    await prisma.contactMessage.delete({
+      where: { id }
+    });
+
+    return res.json({ message: "Mensagem deletada" });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao deletar" });
   }
+}
 };
