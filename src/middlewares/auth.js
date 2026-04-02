@@ -15,7 +15,10 @@ export function verificaToken(req, res, next){
             nome: payload.name,
             tipo: payload.tipo || 'usuario'
         };
-    return next();
+
+         req.userId = payload.sub;
+   
+         return next();
     }catch (e){
         return res.status(403).json({ error: "Token inválido ou expirado" });
     }

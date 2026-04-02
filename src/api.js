@@ -10,6 +10,7 @@ import shelterRoutes from './routes/shelter.js';
 import uploadRoutes from './routes/upload.js';
 import userRoutes from './routes/user.js';
 import auditRoutes from './routes/audit.routes.js';
+import contactMessageRoutes from './routes/contactMessage.js';
 
 import { verificaToken } from './middlewares/auth.js';
 
@@ -26,7 +27,8 @@ app.use('/animals',animalRoutes);
 app.use('/shelters',shelterRoutes);
 app.use('/adoptions',verificaToken, adoptionRoutes);
 app.use('/audit', auditRoutes);
-
+app.use('/messages', contactMessageRoutes);
+app.use('/messages/my', contactMessageRoutes);
 
 //Middleware de erro simples
 app.use((err, _req, res, _next) => {
