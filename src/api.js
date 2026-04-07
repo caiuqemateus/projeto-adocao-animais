@@ -6,11 +6,11 @@ import path from 'path';
 
 import adoptionRoutes from './routes/adoption.js';
 import animalRoutes from './routes/animal.js';
+import auditRoutes from './routes/audit.routes.js';
+import contactMessageRoutes from './routes/contactMessage.js';
 import shelterRoutes from './routes/shelter.js';
 import uploadRoutes from './routes/upload.js';
 import userRoutes from './routes/user.js';
-import auditRoutes from './routes/audit.routes.js';
-import contactMessageRoutes from './routes/contactMessage.js';
 
 import { verificaToken } from './middlewares/auth.js';
 
@@ -18,7 +18,7 @@ const app = express();
 app.use(cors({
   origin: 'http://localhost:3000'
 }));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 app.use('/uploads', express.static(path.resolve('uploads')));
 app.use('/upload', uploadRoutes);
@@ -33,6 +33,9 @@ app.use('/messages/my', contactMessageRoutes);
 //Middleware de erro simples
 app.use((err, _req, res, _next) => {
     console.error(err);
+    if (err.status === 413 || err.type === 'entity.too.large') {
+        return res.status(413).json({ error: 'Payload muito grande. Use o endpoint /upload para enviar imagens.' });
+    }
     if (err.code === 'P2002'){
         return res.status(409).json({
             error: 'Registro duplicado (unique)'

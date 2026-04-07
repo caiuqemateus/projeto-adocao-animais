@@ -1,13 +1,13 @@
-import prisma from '../prisma.js';
 import { logAudit } from '../helpers/audit.js';
+import prisma from '../prisma.js';
 export const AnimalController = {
     async store(req, res, next){
         try{
             const {nome, especie, vacinado, castrado, porte, foto, raca, idade, sexo, descricao, disponivel, tags, comoAdotar } = req.body;
             let { userId, shelterId } = req.body;
             
-            if(descricao && descricao.length > 244){
-                return res.status(400).json({'erro':"Quantidade de caracteres da descrição ultrapassam 244"});
+            if(descricao && descricao.length > 1000){
+                return res.status(400).json({'erro':"Quantidade de caracteres da descrição ultrapassam 1000"});
             }
 
             if (!userId && !shelterId) {
