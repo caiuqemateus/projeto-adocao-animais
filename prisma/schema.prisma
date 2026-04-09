@@ -39,6 +39,7 @@ model User {
   animais   Animal[]
   adocoes   Adoption[]
   group     GroupUser[]
+  favoritos Favorite[]
  
   @@map("users")
 }
@@ -90,6 +91,8 @@ model Animal {
   shelter   Shelter? @relation(fields: [shelterId], references: [id])
 
   adocao    Adoption?
+
+  favoritos Favorite[]
  
   @@map("animals")
 
@@ -228,4 +231,17 @@ model ContactMessage {
   mensagem  String
   resposta  String?
   createdAt DateTime @default(now())
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  animalId  Int
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  animal Animal @relation(fields: [animalId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, animalId], name: "userId_animalId")
+  @@map("favorites")
 }
