@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+﻿import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import prisma from '../prisma.js';
 import { logAudit } from '../helpers/audit.js';
@@ -10,16 +10,16 @@ export const ShelterController= {
             const { nome, cnpj, endereco, telefone, responsavel, urlImage, isActive, email, senha } = req.body;
 
             if (!email || !senha) {
-                return res.status(400).json({ error: "Email e senha são obrigatórios" });
+                return res.status(400).json({ error: "Email e senha sao obrigatorios" });
             }
 
             if (senha.length < 6) {
-                return res.status(400).json({ error: "A senha deve ter no mínimo 6 caracteres" });
+                return res.status(400).json({ error: "A senha deve ter no minimo 6 caracteres" });
             }
 
             if (endereco && endereco.length > 244){
                 return res.status(400).json({
-                  error: "Quantidade de caracteres do endereço ultrapassam 244"
+                  error: "Quantidade de caracteres do endereco ultrapassam 244"
                 });
             }
 
@@ -31,8 +31,8 @@ export const ShelterController= {
                     email,
                     pass: hash,
                     cnpj,
-                    endereco: endereco || null,   
-                    telefone: telefone || null, 
+                    endereco: endereco || null,
+                    telefone: telefone || null,
                     responsavel: responsavel || null,
                     urlImage: Array.isArray(urlImage)
                         ? urlImage
@@ -41,7 +41,6 @@ export const ShelterController= {
                 }
             });
 
-            // 🔥 AUDITORIA CREATE
             await logAudit({
                 action: "CREATE",
                 entity: "SHELTER",
@@ -98,7 +97,7 @@ export const ShelterController= {
             const id = Number(req.params.id)
 
             if(!req.logado?.id){
-                return res.status(401).json({ error: "Usuário não logado" })
+                return res.status(401).json({ error: "Usuario nao logado" })
             }
 
             let s = await prisma.shelter.findFirstOrThrow({
@@ -114,7 +113,7 @@ export const ShelterController= {
             })
 
         }catch{
-            res.status(404).json({ error: "Não encontrado" });
+            res.status(404).json({ error: "Nao encontrado" });
         }
     },
 
@@ -124,7 +123,6 @@ export const ShelterController= {
 
             const s = await prisma.shelter.delete({ where: { id } })
 
-            // 🔥 AUDITORIA DELETE
             await logAudit({
                 action: "DELETE",
                 entity: "SHELTER",
@@ -135,7 +133,7 @@ export const ShelterController= {
             res.status(200).json(s)
 
         }catch{
-            res.status(404).json({ error: "Não encontrado" });
+            res.status(404).json({ error: "Nao encontrado" });
         }
     },
 
@@ -150,6 +148,7 @@ export const ShelterController= {
             if (req.body.endereco) body.endereco = req.body.endereco
             if (req.body.telefone) body.telefone = req.body.telefone
             if (req.body.responsavel) body.responsavel = req.body.responsavel
+            if (Array.isArray(req.body.mensages)) body.mensages = req.body.mensages
 
             if (req.body.urlImage) {
                 body.urlImage = Array.isArray(req.body.urlImage)
@@ -169,7 +168,6 @@ export const ShelterController= {
                 data: body
             });
 
-            // 🔥 AUDITORIA UPDATE / STATUS
             await logAudit({
                 action,
                 entity: "SHELTER",
@@ -184,7 +182,84 @@ export const ShelterController= {
 
         }catch(err){
             console.error(err);
-            res.status(404).json({ error: "Não encontrado" });
+            res.status(404).json({ error: "Nao encontrado" });
+        }
+    },
+
+    async requestContact(req, res, next) {
+        try {
+            const shelterId = Number(req.params.id);
+            const userId = Number(req.logado?.id);
+            const userTipo = req.logado?.tipo || 'usuario';
+            const { animalId, animalNome, userTelefone } = req.body || {};
+
+            if (!req.logado?.id) {
+                return res.status(401).json({ error: 'Usuario nao autenticado' });
+            }
+
+            if (userTipo === 'shelter') {
+                return res.status(403).json({ error: 'ONG nao pode enviar solicitacao para outra ONG.' });
+            }
+
+            if (!Number.isFinite(shelterId) || shelterId <= 0) {
+                return res.status(400).json({ error: 'ONG invalida.' });
+            }
+
+            if (!animalId) {
+                return res.status(400).json({ error: 'animalId e obrigatorio.' });
+            }
+
+            const [shelter, user, animal] = await Promise.all([
+                prisma.shelter.findFirstOrThrow({ where: { id: shelterId } }),
+                prisma.user.findFirstOrThrow({ where: { id: userId } }),
+                prisma.animal.findFirstOrThrow({ where: { id: Number(animalId) } }),
+            ]);
+
+            if (animal.shelterId !== shelterId) {
+                return res.status(400).json({ error: 'Este animal nao pertence a ONG informada.' });
+            }
+
+            const existingMessages = Array.isArray(shelter.mensages) ? shelter.mensages : [];
+            const hasPendingDuplicate = existingMessages.some((raw) => {
+                try {
+                    const parsed = JSON.parse(raw);
+                    return parsed?.type === 'adoption_request' &&
+                        String(parsed?.animalId) === String(animal.id) &&
+                        String(parsed?.userId) === String(user.id) &&
+                        String(parsed?.status || 'PENDING') === 'PENDING';
+                } catch {
+                    return false;
+                }
+            });
+
+            if (hasPendingDuplicate) {
+                return res.status(409).json({ error: 'Voce ja enviou uma solicitacao pendente para este pet.' });
+            }
+
+            const payload = {
+                id: `${Date.now()}-${user.id}-${animal.id}`,
+                type: 'adoption_request',
+                status: 'PENDING',
+                createdAt: new Date().toISOString(),
+                shelterId: shelter.id,
+                animalId: String(animal.id),
+                animalNome: animalNome || animal.nome,
+                userId: String(user.id),
+                userNome: user.name,
+                userEmail: user.email,
+                userTelefone: String(userTelefone || user.phone || ''),
+            };
+
+            await prisma.shelter.update({
+                where: { id: shelter.id },
+                data: {
+                    mensages: [...existingMessages, JSON.stringify(payload)],
+                }
+            });
+
+            return res.status(201).json({ message: 'Solicitacao enviada com sucesso.', requestId: payload.id });
+        } catch (err) {
+            next(err);
         }
     },
 
@@ -205,13 +280,13 @@ export const ShelterController= {
             }
 
             if (!s.pass) {
-                return res.status(403).json({ error: "Esta ONG não possui senha cadastrada" });
+                return res.status(403).json({ error: "Esta ONG nao possui senha cadastrada" });
             }
 
             const ok = await bcrypt.compare(senha, s.pass);
 
             if (!ok) {
-                return res.status(401).json({ error: "Credenciais inválidas" });
+                return res.status(401).json({ error: "Credenciais invalidas" });
             }
 
             const token = jwt.sign(
@@ -253,11 +328,12 @@ export const ShelterController= {
                 telefone: s.telefone,
                 endereco: s.endereco,
                 urlImage: s.urlImage,
-                isActive: s.status
+                isActive: s.status,
+                mensages: s.mensages
             });
 
         } catch {
-            res.status(404).json({ error: "ONG não encontrada" });
+            res.status(404).json({ error: "ONG nao encontrada" });
         }
     },
 };
